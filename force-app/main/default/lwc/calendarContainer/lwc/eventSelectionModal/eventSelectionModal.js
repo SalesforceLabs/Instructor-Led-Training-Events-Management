@@ -9,7 +9,7 @@ export default class EventSelectionModal extends LightningElement {
     //**********************************************************************************************
     // RECORD VARS
     @track selectedRecordId;
-    @api objectApiName;
+    @api objectData;
 
     //**********************************************************************************************
     // MODAL VARIABLES

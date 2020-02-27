@@ -95,12 +95,12 @@
 
     <template if:true={showEventSelectModal}>
         <c-event-selection-modal oncancel={handleCloseEventSelectModal} onclose={handleCloseEventSelectModal}
-            object-api-name={objectAPIName} modal-selection-type={modalSelectionType} modal-data={modalData}>
+            object-data={objectData} modal-selection-type={modalSelectionType} modal-data={modalData}>
         </c-event-selection-modal>
     </template>
 
     <template if:true={showEventCreateModal}>
         <c-event-creation-modal oncancel={handleCloseEventCreateModal} onclose={handleCloseEventCreateModal}
-            object-api-name={objectAPIName} hide-footer="true"></c-event-creation-modal>
+            object-data={objectData} hide-footer="true"></c-event-creation-modal>
     </template>
 </template>

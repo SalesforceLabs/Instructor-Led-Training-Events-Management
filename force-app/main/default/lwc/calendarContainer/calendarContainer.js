@@ -1,5 +1,6 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import getCalendarData from '@salesforce/apex/CalendarCtrl.getCalendarData';
+import { refreshApex } from '@salesforce/apex';
 
 import TRAINING_EVENT_OCCURANCE from '@salesforce/schema/Training_Event_Occurrence__c';
 
@@ -14,7 +15,15 @@ export default class CalendarContainer extends LightningElement {
     @track calendarData;                // calendar data that is sent back to the html
     @track salesforceRecords;           // sf data that is returned from the org
 
-    objectAPIName = 'Training_Event_Occurrence__c';      // Field names of the obj
+    wiredReference;
+
+    objectData = {
+        apiName: TRAINING_EVENT_OCCURANCE.objectApiName,
+        schemaData : TRAINING_EVENT_OCCURANCE,
+        fields: {
+            
+        }
+    }; 
 
     @track showDateSelection = false;   // allow users to input date options 
 
@@ -73,7 +82,10 @@ export default class CalendarContainer extends LightningElement {
         currentMonth: '$currentMonth',
         currentYear: '$currentYear'
     })
-    wiredData({ error, data }) {
+    wiredData(value) {
+        this.wiredReference = value;
+        const { data, error } = value;
+
         if(data){
             // get data and render cal
             this.salesforceRecords = data;
@@ -91,8 +103,6 @@ export default class CalendarContainer extends LightningElement {
     //----------------------------------------------------------------------------------------------------
 
     connectedCallback() {
-        console.log(TRAINING_EVENT_OCCURANCE);
-
         this.renderCalHelper();
     }
 
@@ -158,6 +168,10 @@ export default class CalendarContainer extends LightningElement {
         this.renderCalendar(this.currentMonth, this.currentYear); 
     }
 
+    refreshDataHelper(){
+        return refreshApex(this.wiredReference);
+    }
+
     setCurrentDateToToday() {
         this.currentYear = this.todaysDate.getFullYear();
         this.currentMonth = this.todaysDate.getMonth();
@@ -186,6 +200,7 @@ export default class CalendarContainer extends LightningElement {
     }
 
     closeEventCreateModalHelper() {
+        this.refreshDataHelper();
         this.showEventCreateModal = false;
     }
 

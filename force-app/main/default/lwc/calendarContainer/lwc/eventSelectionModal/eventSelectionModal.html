@@ -16,7 +16,7 @@
                         </header>
 
                         <section class="slds-p-around_small max-width">
-                            <lightning-record-form record-id={modalData.Id} object-api-name={objectApiName}
+                            <lightning-record-form record-id={modalData.Id} object-api-name={objectData.apiName}
                                 layout-type="Full" mode="view">
                             </lightning-record-form>
                         </section>
@@ -46,7 +46,7 @@
                                 <section class="slds-p-around_small max-width">
                                     
                                     <template if:true={showRecordData}>
-                                        <lightning-record-form record-id={selectedRecordId} object-api-name={objectApiName}
+                                        <lightning-record-form record-id={selectedRecordId} object-api-name={objectData.apiName}
                                             layout-type="Full" mode="view">
                                         </lightning-record-form>
                                     </template>
