@@ -1,0 +1,106 @@
+<template>
+    <lightning-card>
+        <section slot="title">
+            <header class="slds-m-vertical_medium slds-align_absolute-center">
+                <span class="item-block">
+                    <lightning-button-icon icon-name="utility:chevronleft" alternative-text="Prev"
+                        onclick={previousMonthClicked}></lightning-button-icon>
+                </span>
+
+                <span class="item-block slds-m-horizontal_medium">
+
+                    <div class="date-text-block" onclick={handleDateTextSelected}>
+                        <p class="slds-text-heading_large text-bold">
+                            {currentMonthLabel} {currentYear}
+                        </p>
+                    </div>
+                </span>
+
+                <span class="item-block">
+                    <lightning-button-icon icon-name="utility:chevronright" alternative-text="Next"
+                        onclick={nextMonthClicked}></lightning-button-icon>
+                </span>
+            </header>
+        </section>
+
+        <section slot="footer">
+
+            <template if:true={showDateSelection}>
+                <section class="slds-m-bottom_large slds-m-horizontal_medium border-bottom">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-align_absolute-center">
+                            <div class="slds-p-horizontal_small">
+                                <lightning-icon icon-name="action:close" alternative-text="Close" class="clickable-icon" size="xx-small" onclick={handleCloseDateSelection}>
+                                </lightning-icon>
+                            </div>
+
+                        </div>
+                        <div class="slds-col slds-align_absolute-center">
+                            <div class="slds-p-horizontal_small">
+                                <lightning-combobox name="selectedMonth" label="Select Month" value={currentMonth}
+                                    options={monthsPicklistOptions} onchange={handleMonthSelectionChange}>
+                                </lightning-combobox>
+                            </div>
+
+                        </div>
+                        <div class="slds-col slds-align_absolute-center">
+                            <div class="slds-p-horizontal_small">
+                                <lightning-combobox name="selectedYear" label="Selected Year" value={currentYear}
+                                    options={yearsPicklistOptions} onchange={handleYearSelectionChange}>
+                                </lightning-combobox>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+            </template>
+
+
+            <div class="calendar-border">
+                <section class="rows-container slds-grid slds-grid_vertical">
+
+                    <header class="row-container slds-col">
+
+                        <template for:each={daysOfWeekList} for:item="day">
+                            <div class="row-item" key={day}>
+                                <div class="slds-align_absolute-center slds-p-vertical_small text-bold">
+                                    {day}
+                                </div>
+                            </div>
+                        </template>
+
+                    </header>
+
+                    <template for:each={calendarData} for:item="row">
+                        <div class="row-container slds-col" key={row.rowId}>
+
+                            <template for:each={row.rowData} for:item="col">
+
+                                <div class="slds-p-around_xx-small row-item" key={col.cellId}>
+                                    <c-calendar-cell-container oneventdateclicked={handleEventDateClicked}
+                                        onopenselectmodal={handleOpenEventSelectModal} current-cell-data={col}>
+                                    </c-calendar-cell-container>
+                                </div>
+
+                            </template>
+
+                        </div>
+                    </template>
+
+                </section>
+            </div>
+        </section>
+    </lightning-card>
+
+    <template if:true={showEventSelectModal}>
+        <c-event-selection-modal oncancel={handleCloseEventSelectModal} onclose={handleCloseEventSelectModal}
+            object-api-name={objectAPIName} modal-selection-type={modalSelectionType} modal-data={modalData}>
+        </c-event-selection-modal>
+    </template>
+
+    <template if:true={showEventCreateModal}>
+        <c-event-creation-modal oncancel={handleCloseEventCreateModal} onclose={handleCloseEventCreateModal}
+            object-api-name={objectAPIName} hide-footer="true"></c-event-creation-modal>
+    </template>
+</template>

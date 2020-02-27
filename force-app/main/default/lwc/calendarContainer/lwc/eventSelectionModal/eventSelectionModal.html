@@ -1,0 +1,69 @@
+<template>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header slds-modal__header_empty">
+                <lightning-button-icon class="slds-modal__close" icon-name="utility:close" size="large"
+                    variant="bare-inverse" onclick={closeClickedHandler}>
+                </lightning-button-icon>
+            </header>
+            <div class="slds-modal__content" id="modal-content-id-1">
+                <slot>
+                    <!-- Event -->
+                    <template if:true={showEventModal}>
+                        <header class="slds-p-around_medium border-bottom">
+                            <h1 class="slds-align_absolute-center slds-text-heading_medium">{modalData.Name} - {modalData.StartTimeString}</h1>
+                        </header>
+
+                        <section class="slds-p-around_small max-width">
+                            <lightning-record-form record-id={modalData.Id} object-api-name={objectApiName}
+                                layout-type="Full" mode="view">
+                            </lightning-record-form>
+                        </section>
+                    </template>
+
+                    <!-- Events -->
+                    <template if:true={showEventsModal}>
+                        <header class="slds-p-around_medium border-bottom">
+                            <h1 class="slds-align_absolute-center slds-text-heading_medium">Events Info - {currentDateString}</h1>
+                        </header>
+
+                        <div class="flex-row-container">
+                            <div class="item-small">
+                                <section class="slds-grid slds-grid_vertical">
+                                    <template for:each={modalData.data.fullList} for:item="event">
+                                        <div class="slds-col border-bottom row-item" key={event.Id} data-id={event.Id} onclick={eventClicked}>
+                                            <p class="slds-p-around_medium slds-align_absolute-center slds-truncate">
+                                                {event.Name} - {event.StartTimeString}
+                                            </p>
+                                        </div>
+                                    </template>
+
+                                </section>
+                            </div>
+
+                            <div class="item-large border-left">
+                                <section class="slds-p-around_small max-width">
+                                    
+                                    <template if:true={showRecordData}>
+                                        <lightning-record-form record-id={selectedRecordId} object-api-name={objectApiName}
+                                            layout-type="Full" mode="view">
+                                        </lightning-record-form>
+                                    </template>
+                                </section>
+
+                            </div>
+                        </div>
+                    </template>
+                </slot>
+            </div>
+            <template if:false={hideFooter}>
+                <footer class="slds-modal__footer">
+                    <lightning-button class="slds-m-right_x-small" variant="neutral" label={cancelLabel}
+                        onclick={cancelClickedHandler}></lightning-button>
+                </footer>
+            </template>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

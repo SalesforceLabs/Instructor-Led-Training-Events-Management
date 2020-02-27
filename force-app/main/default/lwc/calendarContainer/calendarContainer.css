@@ -1,0 +1,43 @@
+.calendar-border{
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: .25rem;
+}
+
+.row-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.row-item{
+    flex: 0 0 14.2847%;
+    border: 1px solid rgba(0,0,0,.06);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-block{
+    display: inline-block;
+}
+
+.text-bold{
+    font-weight: bold;
+}
+
+.text-hover{
+    cursor: pointer;
+}
+
+.datepicker-container{
+    z-index: 99;
+}
+
+.date-text-block:hover{
+    cursor: pointer;
+}
+
+.clickable-icon{
+    cursor: pointer;
+    transform: translateY(0.75rem);
+}

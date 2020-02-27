@@ -1,0 +1,32 @@
+.max-width {
+    width: 100%;
+}
+
+.border-bottom{
+    border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+.border-left{
+    border-left: 1px solid rgba(0,0,0,.06);
+}
+
+.row-item{
+    cursor: pointer;
+}
+
+.row-item:hover{
+    border-bottom: 2px solid #1a73e8;
+}
+
+.flex-row-container{
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.item-small{
+    flex-grow: 2;
+}
+
+.item-large{
+    flex-grow: 8;
+}
