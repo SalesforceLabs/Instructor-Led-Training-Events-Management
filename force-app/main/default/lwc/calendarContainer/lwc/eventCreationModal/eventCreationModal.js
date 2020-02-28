@@ -3,7 +3,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 
 import TRAINING_EVENT_OCCURANCE from '@salesforce/schema/Training_Event_Occurrence__c';
-import TRAINING_EVENT from '@salesforce/schema/Training_Events__c';
+
 
 export default class EventCreationModal extends LightningElement {
 
@@ -17,15 +17,12 @@ export default class EventCreationModal extends LightningElement {
     @api selectedDate;
 
     @track selectedRecordTypeId = '';
-    @track eventObjectData = TRAINING_EVENT;
 
     //**********************************************************************************************
     // MODAL VARIABLES
     @api cancelLabel = "Cancel";
     @api hideFooter = false;
     @api saveDisabled = false;
-
-    @track createNewEventSelected = false;
 
     //**********************************************************************************************
     // GETTERES
@@ -68,16 +65,8 @@ export default class EventCreationModal extends LightningElement {
         this.closeModalHelper();
     }
 
-    handleEventCreation(){
-        this.createNewEventSelected = false;
-    }
-
     handleEventOccuranceFormCancelled() {
         this.closeModalHelper();
-    }
-
-    handleEventFormCancelled(){
-        this.createNewEventSelected = false;
     }
 
     handleFormError(){
@@ -87,10 +76,6 @@ export default class EventCreationModal extends LightningElement {
             variant: "error"
         });
         this.dispatchEvent(evt);
-    }
-
-    handleNewEventClick() {
-        this.createNewEventSelected = true;
     }
 
     handleRecordTypeSelected(event){
