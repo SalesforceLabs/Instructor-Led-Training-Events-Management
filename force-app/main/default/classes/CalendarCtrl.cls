@@ -93,7 +93,7 @@ public with sharing class CalendarCtrl {
             if(resultList != null) {
                 for (Training_Event_Occurrence__c resultItem : resultList) {
                     // Create new events wrapper to add events to
-                    DateWrapper.EventWrapper tempEventWrapper = new DateWrapper.EventWrapper();
+                    EventWrapper tempEventWrapper = new EventWrapper();
                     DateWrapper tempDateWrapper = new DateWrapper();
 
                     try{
@@ -118,7 +118,7 @@ public with sharing class CalendarCtrl {
                         // Check to see if the events list is initialised to avoid pushing to null list
                         tempDateWrapper = tempMap.get(currentRecordStartDate.day());
                         if (tempDateWrapper.Events == null) {
-                            tempDateWrapper.Events = new List<DateWrapper.EventWrapper>();
+                            tempDateWrapper.Events = new List<EventWrapper>();
                         }
                         // Add item to the list and update the temp map
                         tempDateWrapper.Events.add(tempEventWrapper);
