@@ -17,6 +17,8 @@ export default class EventSelectionModal extends LightningElement {
     @api hideFooter = false;
     @api saveDisabled = false;
     @api modalSelectionType;
+    @api isAttendeeView;
+    @api isAdminView;
     
     /**
      * @type {Object} : {

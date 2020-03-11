@@ -23,6 +23,8 @@ export default class EventCreationModal extends LightningElement {
     @api cancelLabel = "Cancel";
     @api hideFooter = false;
     @api saveDisabled = false;
+    @api isAttendeeView;
+    @api isAdminView;
 
     //**********************************************************************************************
     // GETTERES

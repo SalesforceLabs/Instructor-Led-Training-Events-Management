@@ -1,14 +1,14 @@
 <template>
     <section class="cell-container slds-align_absolute-center">
         <div class="slds-grid slds-grid_vertical full-width">
-            <div class="slds-col">
+            <div class="slds-col slds-align_absolute-center">
                 <div class={dateBlockClass} onclick={eventDateClicked}>
                     <span class={dateNumberClass}>{currentCellData.dateNumber}</span>
                 </div>
             </div>
             <template if:true={anyDataToShow}>
                 <template for:each={currentCellData.data.shortList} for:item="item" for:index="index">
-                    <div class="slds-col text-clickable date-text" onclick={eventClicked} data-id={index} key={item.Id}>
+                    <div class="slds-col slds-align_absolute-center text-clickable date-text" onclick={eventClicked} data-id={index} key={item.Id}>
                         <div class="item-block slds-p-horizontal_xx-small slds-truncate">
                             <span class="">{item.StartTimeString} - <span class="text-bold">{item.Name}</span></span> 
                         </div>
@@ -16,7 +16,7 @@
                 </template>
             </template>
             <template if:true={extraItemsToShow}>
-                <div class="slds-col text-bold text-clickable text-hover-shadow" onclick={showMoreEventsClicked}>
+                <div class="slds-col slds-align_absolute-center text-bold text-clickable text-hover-shadow" onclick={showMoreEventsClicked}>
                     <div class="item-block slds-p-horizontal_xx-small">
                         <span>{currentCellData.data.numHiddenItems} more</span>
                     </div>

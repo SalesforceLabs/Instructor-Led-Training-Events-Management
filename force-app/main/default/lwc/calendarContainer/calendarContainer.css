@@ -17,6 +17,11 @@
     text-overflow: ellipsis;
 }
 
+.row-span-3{
+    flex: 0 0 42.8571428571%;
+    border: 1px solid rgba(0,0,0,.06);
+}
+
 .item-block{
     display: inline-block;
 }

@@ -44,6 +44,8 @@ export default class CalendarContainer extends LightningElement {
     // Design attributes
     @api showOnlyMyRecords = false;
     @api allowEventCreation = false;
+    @api isAdminView = false;
+    @api isAttendeeView = false;
 
     //**********************************************************************************************
     // Constant values
