@@ -105,6 +105,8 @@ export default class CalendarContainer extends LightningElement {
     //----------------------------------------------------------------------------------------------------
 
     connectedCallback() {
+        console.log(this.showOnlyMyRecords);
+        console.log(typeof(this.showOnlyMyRecords));
         this.renderCalHelper();
     }
 

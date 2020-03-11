@@ -30,11 +30,22 @@ public with sharing class CalendarCtrl {
                     Id userId = UserInfo.getUserId();
 
                     resultList = [
-                        SELECT Id, Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c
+                        SELECT
+                            Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c, 
+          		                ( SELECT Id, Attendance_Confirmed__c, Sign_Up_Confirmed__c, Related_Contact__r.Id, Related_Contact__r.Name, Related_Contact__r.Email FROM Training_Event_Attendees)
                         FROM Training_Event_Occurrence__c
-                        WHERE CALENDAR_MONTH(Start_Date_Time__c) =: currentMonth AND CALENDAR_YEAR(Start_Date_Time__c) =: currentYear AND Instructor__c = :userId 
+                        WHERE CALENDAR_MONTH(Start_Date_Time__c) =: currentMonth AND CALENDAR_YEAR(Start_Date_Time__c) =: currentYear AND Training_Event_Occurrence__r.Instructor__c = :userId 
                         WITH SECURITY_ENFORCED
                     ];
+
+                    /*
+                    for (Training_Event_Occurrence__c ta : resultList){
+                        if(ta.Training_Event_Attendees__r.size() > 0){
+                            system.debug(ta.Training_Event_Attendees__r);
+                        }
+                        
+                    }
+                    */
 
                 } else {
 
@@ -51,8 +62,10 @@ public with sharing class CalendarCtrl {
                 resultList = null;
             } // end try / catch
 
+            List<Training_Event_Attendee__c> test = new List<Training_Event_Attendee__c>();
+
             // return a wrapper to the child cmp
-            return convertResultsToWrapper(resultList, currentMonth, currentYear);
+            return convertResultsToWrapper(resultList, attendeeList, currentMonth, currentYear);
     }
 
 
@@ -69,6 +82,7 @@ public with sharing class CalendarCtrl {
     */
     private static List<DateWrapper> convertResultsToWrapper(
         List<Training_Event_Occurrence__c> resultList, 
+        List<Training_Event_Attendee__c> attendeesList,
         Integer currentMonth,
         Integer currentYear) {
             

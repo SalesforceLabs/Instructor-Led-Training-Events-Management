@@ -65,6 +65,10 @@
     cursor: pointer;
 }
 
+.text-center{
+    text-align: center;
+}
+
 .text-hover-shadow:hover{
     border-radius: 0.25rem;
     background-color: rgba(26,115,232,0.1);
