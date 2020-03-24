@@ -1,5 +1,8 @@
 public with sharing class AttendeesWrapper {
     @AuraEnabled
+    public String Id { get; set; }
+
+    @AuraEnabled
     public String Name { get; set; }
 
     @AuraEnabled

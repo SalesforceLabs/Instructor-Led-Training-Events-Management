@@ -21,10 +21,10 @@ public with sharing class EventWrapper {
     public Boolean EventFull { get; set; }
 
     @AuraEnabled
-    public Integer NumSignUps { get; set; }
+    public Decimal NumSignUps { get; set; }
 
     @AuraEnabled
-    public Integer NumAttendees { get; set; }
+    public Decimal NumAttendees { get; set; }
 
     @AuraEnabled
     public List<AttendeesWrapper> Attendees { get; set; }

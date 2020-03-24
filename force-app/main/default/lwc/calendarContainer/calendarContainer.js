@@ -40,6 +40,10 @@ export default class CalendarContainer extends LightningElement {
     @track currentMonth = this.todaysDate.getMonth();   // the month we are currently displaying data for
     @track currentYear = this.todaysDate.getFullYear(); // the year we are currently displaying data for
 
+    @track todaysFilterDate = new Date();                           // the current date
+    @track currentFilterMonth = this.todaysFilterDate.getMonth();   // the month we are currently displaying data for
+    @track currentFilterYear = this.todaysFilterDate.getFullYear(); // the year we are currently displaying data for
+
     //**********************************************************************************************
     // Design attributes
     @api showOnlyMyRecords = false;
@@ -68,9 +72,9 @@ export default class CalendarContainer extends LightningElement {
 
     get yearsPicklistOptions() {
         let optionsList = [];
-        let startingYear = this.currentYear - 10;
+        let startingYear = this.currentFilterYear - 5;
 
-        for(let i = 0; i < 20; i++){
+        for(let i = 0; i < 10; i++){
             optionsList.push({ label: startingYear + i, value: startingYear + i });
         }
 
@@ -81,8 +85,9 @@ export default class CalendarContainer extends LightningElement {
     // Wire Variables
     @wire(getCalendarData, { 
         showUserRecordsOnly: '$showOnlyMyRecords',
+        adminViewShown: '$isAdminView',
         currentMonth: '$currentMonth',
-        currentYear: '$currentYear'
+        currentYear: '$currentYear',
     })
     wiredData(value) {
         this.wiredReference = value;
@@ -90,6 +95,8 @@ export default class CalendarContainer extends LightningElement {
 
         if(data){
             // get data and render cal
+            console.log(data);
+
             this.salesforceRecords = data;
             this.renderCalHelper();
         } else if(error) {
