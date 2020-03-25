@@ -1,0 +1,16 @@
+<template>
+    <template if:true={showAttendeeList}>
+        <div class="slds-grid slds-grid_vertical">
+            <template for:each={attendeeList} for:item="attendee">
+                <div class="slds-col" key={attendee.Id}>
+                    {attendee.Name} - {attendee.EmailAddress} - {attendee.SignUpConfirmed} - {attendee.AttendanceConfirmed}
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <template if:false={showAttendeeList}>
+        <div>No attendees found for event</div>
+    </template>
+    
+</template>

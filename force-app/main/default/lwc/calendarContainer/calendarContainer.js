@@ -95,8 +95,6 @@ export default class CalendarContainer extends LightningElement {
 
         if(data){
             // get data and render cal
-            console.log(data);
-
             this.salesforceRecords = data;
             this.renderCalHelper();
         } else if(error) {
@@ -112,8 +110,6 @@ export default class CalendarContainer extends LightningElement {
     //----------------------------------------------------------------------------------------------------
 
     connectedCallback() {
-        console.log(this.showOnlyMyRecords);
-        console.log(typeof(this.showOnlyMyRecords));
         this.renderCalHelper();
     }
 

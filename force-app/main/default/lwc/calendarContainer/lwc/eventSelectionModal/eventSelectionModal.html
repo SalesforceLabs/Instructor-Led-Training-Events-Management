@@ -9,52 +9,142 @@
             </header>
             <div class="slds-modal__content" id="modal-content-id-1">
                 <slot>
-                    <!-- Event -->
-                    <template if:true={showEventModal}>
-                        <header class="slds-p-around_medium border-bottom">
-                            <h1 class="slds-align_absolute-center slds-text-heading_medium">{modalData.Name} - {modalData.StartTimeString}</h1>
-                        </header>
+                    <!-- ADMIN VIEW -->
+                    <template if:true={isAdminView}>
+                        <!-- Event -->
+                        <template if:true={showEventModal}>
+                            <header class="slds-p-around_medium border-bottom">
+                                <h1 class="slds-align_absolute-center slds-text-heading_medium">{modalData.Name} -
+                                    {modalData.StartTimeString}</h1>
+                            </header>
 
-                        <section class="slds-p-around_small max-width">
-                            <lightning-record-form record-id={modalData.Id} object-api-name={objectData.apiName}
-                                layout-type="Full" mode="view">
-                            </lightning-record-form>
-                        </section>
-                    </template>
+                            <lightning-accordion active-section-name="details">
+                                <lightning-accordion-section name="details" label="Details">
 
-                    <!-- Events -->
-                    <template if:true={showEventsModal}>
-                        <header class="slds-p-around_medium border-bottom">
-                            <h1 class="slds-align_absolute-center slds-text-heading_medium">Events Info - {currentDateString}</h1>
-                        </header>
-
-                        <div class="flex-row-container">
-                            <div class="item-small">
-                                <section class="slds-grid slds-grid_vertical">
-                                    <template for:each={modalData.data.fullList} for:item="event">
-                                        <div class="slds-col border-bottom row-item" key={event.Id} data-id={event.Id} onclick={eventClicked}>
-                                            <p class="slds-p-around_medium slds-align_absolute-center slds-truncate">
-                                                {event.Name} - {event.StartTimeString}
-                                            </p>
-                                        </div>
-                                    </template>
-
-                                </section>
-                            </div>
-
-                            <div class="item-large border-left">
-                                <section class="slds-p-around_small max-width">
-                                    
-                                    <template if:true={showRecordData}>
-                                        <lightning-record-form record-id={selectedRecordId} object-api-name={objectData.apiName}
+                                    <section class="slds-p-around_small max-width">
+                                        <lightning-record-form record-id={modalData.Id} object-api-name={objectData.apiName}
                                             layout-type="Full" mode="view">
                                         </lightning-record-form>
-                                    </template>
-                                </section>
+                                    </section>
 
+                                </lightning-accordion-section>
+
+                                <lightning-accordion-section name="attendees" label="Attendees">
+
+                                    <section class="slds-p-around_small max-width">
+                                        <c-attendee-list-view attendee-list={modalData.Attendees}></c-attendee-list-view>
+                                    </section>
+
+                                </lightning-accordion-section>
+                            </lightning-accordion>
+                        </template>
+
+                        <!-- Events -->
+                        <template if:true={showEventsModal}>
+                            <header class="slds-p-around_medium border-bottom">
+                                <h1 class="slds-align_absolute-center slds-text-heading_medium">Events Info -
+                                    {currentDateString}</h1>
+                            </header>
+
+                            <div class="flex-row-container">
+                                <div class="item-small">
+                                    <section class="slds-grid slds-grid_vertical">
+                                        <template for:each={modalData.data.fullList} for:item="event">
+                                            <div class="slds-col border-bottom row-item" key={event.Id}
+                                                data-id={event.Id} onclick={eventClicked}>
+                                                <p
+                                                    class="slds-p-around_medium slds-align_absolute-center slds-truncate">
+                                                    {event.Name} - {event.StartTimeString}
+                                                </p>
+                                            </div>
+                                        </template>
+
+                                    </section>
+                                </div>
+
+                                <div class="item-large border-left">
+
+                                    <lightning-accordion active-section-name="details">
+                                        <lightning-accordion-section name="details" label="Details">
+
+                                            <section class="slds-p-around_small max-width">
+                                                <template if:true={showRecordData}>
+                                                    <lightning-record-form record-id={selectedRecordId}
+                                                        object-api-name={objectData.apiName} layout-type="Full" mode="view">
+                                                    </lightning-record-form>
+                                                </template>
+                                            </section>
+
+                                        </lightning-accordion-section>
+        
+                                        <lightning-accordion-section name="attendees" label="Attendees">
+
+                                            <section class="slds-p-around_small max-width">
+                                                <c-attendee-list-view></c-attendee-list-view>
+                                            </section>
+
+                                        </lightning-accordion-section>
+                                    </lightning-accordion>
+                                   
+                                </div>
                             </div>
-                        </div>
+                        </template>
                     </template>
+
+
+                    <!-- ATTENDEE VIEW -->
+                    <template if:true={isAttendeeView}>
+                        <!-- Event -->
+                        <template if:true={showEventModal}>
+                            <header class="slds-p-around_medium border-bottom">
+                                <h1 class="slds-align_absolute-center slds-text-heading_medium">{modalData.Name} -
+                                    {modalData.StartTimeString}</h1>
+                            </header>
+
+                            <section class="slds-p-around_small max-width">
+                                <lightning-record-form record-id={modalData.Id} object-api-name={objectData.apiName}
+                                    layout-type="Full" mode="view">
+                                </lightning-record-form>
+                            </section>
+                        </template>
+
+                        <!-- Events -->
+                        <template if:true={showEventsModal}>
+                            <header class="slds-p-around_medium border-bottom">
+                                <h1 class="slds-align_absolute-center slds-text-heading_medium">Events Info -
+                                    {currentDateString}</h1>
+                            </header>
+
+                            <div class="flex-row-container">
+                                <div class="item-small">
+                                    <section class="slds-grid slds-grid_vertical">
+                                        <template for:each={modalData.data.fullList} for:item="event">
+                                            <div class="slds-col border-bottom row-item" key={event.Id}
+                                                data-id={event.Id} onclick={eventClicked}>
+                                                <p
+                                                    class="slds-p-around_medium slds-align_absolute-center slds-truncate">
+                                                    {event.Name} - {event.StartTimeString}
+                                                </p>
+                                            </div>
+                                        </template>
+
+                                    </section>
+                                </div>
+
+                                <div class="item-large border-left">
+                                    <section class="slds-p-around_small max-width">
+
+                                        <template if:true={showRecordData}>
+                                            <lightning-record-form record-id={selectedRecordId}
+                                                object-api-name={objectData.apiName} layout-type="Full" mode="view">
+                                            </lightning-record-form>
+                                        </template>
+                                    </section>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+
                 </slot>
             </div>
             <template if:false={hideFooter}>
