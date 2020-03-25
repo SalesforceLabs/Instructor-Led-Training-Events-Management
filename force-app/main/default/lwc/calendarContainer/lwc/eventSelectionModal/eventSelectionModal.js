@@ -48,7 +48,11 @@ export default class EventSelectionModal extends LightningElement {
     //**********************************************************************************************
     // GETTERS
     get showRecordData() {
-        return this.selectedRecordId !== undefined;
+        return this.selectedRecordId !== undefined
+    }
+
+    get showAttendeeData() {
+        return this.selectedAttendeeList !== undefined;
     }
 
     get showEventModal() {
@@ -67,8 +71,14 @@ export default class EventSelectionModal extends LightningElement {
     }
         
     //----------------------------------------------------------------------------------------------------
-    // Onclick Handlers
+    // Onclick / Event Handlers
     //----------------------------------------------------------------------------------------------------
+
+    handleAttendeeDeleted(event){
+        const parentEvent = new CustomEvent("recorddeleted", { detail : event.detail });
+        this.dispatchEvent(parentEvent);
+        this.closeClickedHandler();
+    }
 
     cancelClickedHandler() {
         this.dispatchEvent(new CustomEvent("cancel"));
@@ -80,5 +90,13 @@ export default class EventSelectionModal extends LightningElement {
 
     eventClicked(event) {
         this.selectedRecordId = event.currentTarget.dataset.id;
+        let tempList = this.modalData.data.fullList.find( item => item.Id === this.selectedRecordId).Attendees;
+
+        // To get over the render condition (if both items are undefined)
+        if(tempList === undefined){
+            this.selectedAttendeeList = [];
+        } else {
+            this.selectedAttendeeList = tempList;
+        }
     }
 }

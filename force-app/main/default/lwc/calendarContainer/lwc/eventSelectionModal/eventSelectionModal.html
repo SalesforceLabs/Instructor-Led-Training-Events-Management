@@ -32,7 +32,7 @@
                                 <lightning-accordion-section name="attendees" label="Attendees">
 
                                     <section class="slds-p-around_small max-width">
-                                        <c-attendee-list-view attendee-list={modalData.Attendees}></c-attendee-list-view>
+                                        <c-attendee-list-view attendee-list={modalData.Attendees} onattendeeremoved={handleAttendeeDeleted}></c-attendee-list-view>
                                     </section>
 
                                 </lightning-accordion-section>
@@ -68,11 +68,17 @@
                                         <lightning-accordion-section name="details" label="Details">
 
                                             <section class="slds-p-around_small max-width">
+
                                                 <template if:true={showRecordData}>
                                                     <lightning-record-form record-id={selectedRecordId}
                                                         object-api-name={objectData.apiName} layout-type="Full" mode="view">
                                                     </lightning-record-form>
                                                 </template>
+
+                                                <template if:false={showRecordData}>
+                                                    Please select an event...
+                                                </template>
+
                                             </section>
 
                                         </lightning-accordion-section>
@@ -80,7 +86,15 @@
                                         <lightning-accordion-section name="attendees" label="Attendees">
 
                                             <section class="slds-p-around_small max-width">
-                                                <c-attendee-list-view></c-attendee-list-view>
+
+                                                <template if:true={showAttendeeData}>
+                                                    <c-attendee-list-view attendee-list={selectedAttendeeList} onattendeeremoved={handleAttendeeDeleted}></c-attendee-list-view>
+                                                </template>
+                                                
+                                                <template if:false={showAttendeeData}>
+                                                    Please select an event...
+                                                </template>
+
                                             </section>
 
                                         </lightning-accordion-section>

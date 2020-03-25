@@ -1,0 +1,11 @@
+.clickable{
+    cursor: pointer;
+}
+
+.border-bottom{
+    border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+.text-bold{
+    font-weight: bold;
+}

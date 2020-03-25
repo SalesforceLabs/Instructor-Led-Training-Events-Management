@@ -9,6 +9,7 @@ public with sharing class CalendarCtrl {
         @param: adminViewShown - Determines whether or not we have to query the attendees list also
         @param: currentMonth - Current month as a number (0-11)
         @param: currentYear - Current year as a number e.g 2020
+        @param: changedRecordId - Any records that have changed forcing this to be fired
 
         @returns: List<DateWrapper> - Returns all info for the current month in a wrapper list
     */
@@ -17,8 +18,13 @@ public with sharing class CalendarCtrl {
         Boolean showUserRecordsOnly,
         Boolean adminViewShown,
         Integer currentMonth,
-        Integer currentYear){
-            
+        Integer currentYear,
+        String changedRecordId){
+            /*
+            if(changedRecordId != null){
+                System.debug('Fired due to record changing: ' + changedRecordId);
+            }*/
+
             // increment month as it is one number lower in javascript
             currentMonth ++;
 

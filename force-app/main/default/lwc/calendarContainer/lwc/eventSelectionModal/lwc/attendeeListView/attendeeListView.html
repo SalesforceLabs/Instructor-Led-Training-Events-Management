@@ -1,9 +1,67 @@
 <template>
     <template if:true={showAttendeeList}>
         <div class="slds-grid slds-grid_vertical">
+            <div class="slds-col border-bottom">
+
+                <header class="slds-grid slds-align_absolute-center slds-p-vertical_x-small">
+                    <div class="slds-col slds-text-align_center slds-size_1-of-5 text-bold slds-text-heading_small">
+                        Name    
+                    </div>
+
+                    <div class="slds-col slds-text-align_center slds-size_1-of-5 text-bold slds-text-heading_small">
+                        Email Address
+                    </div>
+
+                    <div class="slds-col slds-text-align_center slds-size_1-of-5 text-bold slds-text-heading_small">
+                        Sign Up Confirmed
+                    </div>
+
+                    <div class="slds-col slds-text-align_center slds-size_1-of-5 text-bold slds-text-heading_small">
+                        Attendance Confirmed
+                    </div>
+
+                    <div class="slds-col slds-text-align_center slds-size_1-of-5 text-bold slds-text-heading_small">
+                        Remove Attendee
+                    </div>
+                </header>
+
+            </div>
+            
             <template for:each={attendeeList} for:item="attendee">
-                <div class="slds-col" key={attendee.Id}>
-                    {attendee.Name} - {attendee.EmailAddress} - {attendee.SignUpConfirmed} - {attendee.AttendanceConfirmed}
+                <div class="slds-col border-bottom" key={attendee.Id}>
+                    <div class="slds-grid slds-align_absolute-center slds-p-vertical_x-small">
+                        <div class="slds-col slds-text-align_center slds-size_1-of-5">
+                            {attendee.Name}
+                        </div>
+    
+                        <div class="slds-col slds-text-align_center slds-size_1-of-5 ">
+                            {attendee.EmailAddress}
+                        </div>
+    
+                        <div class="slds-col slds-text-align_center slds-size_1-of-5">
+                            <template if:true={attendee.SignUpConfirmed}>
+                                <lightning-icon icon-name="action:approval" alternative-text="Confirmed!" size="xx-small"></lightning-icon>
+                            </template>
+                            <template if:false={attendee.SignUpConfirmed}>
+                                <lightning-icon icon-name="action:close" alternative-text="Not Confirmed!" size="xx-small"></lightning-icon>
+                            </template>
+                        </div>
+    
+                        <div class="slds-col slds-text-align_center slds-size_1-of-5">
+                            <template if:true={attendee.AttendanceConfirmed}>
+                                <lightning-icon icon-name="action:approval" alternative-text="Confirmed!" size="xx-small"></lightning-icon>
+                            </template>
+                            <template if:false={attendee.AttendanceConfirmed}>
+                                <lightning-icon icon-name="action:close" alternative-text="Not Confirmed!" size="xx-small"></lightning-icon>
+                            </template>
+                        </div>
+
+                        <div class="slds-col slds-text-align_center slds-size_1-of-5">
+                            <div class="clickable" onclick={handleDeleteAttendee} data-id={attendee.Id}>
+                                <lightning-icon icon-name="action:delete" alternative-text="Remove Attendee" size="xx-small"></lightning-icon>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </template>
         </div>

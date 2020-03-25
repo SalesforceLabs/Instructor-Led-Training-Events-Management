@@ -11,6 +11,11 @@ export default class CalendarContainer extends LightningElement {
     //----------------------------------------------------------------------------------------------------
 
     //**********************************************************************************************
+    // Constant values
+    daysOfWeekList = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; // months array that holds names of the months (can be changed)
+    monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; // moths array that holds names of the months (can be changed)
+
+    //**********************************************************************************************
     // Display + Org Data
     @track calendarData;                // calendar data that is sent back to the html
     @track salesforceRecords;           // sf data that is returned from the org
@@ -33,6 +38,7 @@ export default class CalendarContainer extends LightningElement {
     @track showEventCreateModal = false;    // used to determine whther or not to show the event create modal
     @track modalSelectionType = 'events';   // used to determine what type of modal to show (either a single event or events)
     @track modalData;                       // the data to be passed to the modal
+    @track deletedRecordId = '';            // will be updated when a child cmp delete a record
 
     //**********************************************************************************************
     // Date Variables
@@ -40,21 +46,12 @@ export default class CalendarContainer extends LightningElement {
     @track currentMonth = this.todaysDate.getMonth();   // the month we are currently displaying data for
     @track currentYear = this.todaysDate.getFullYear(); // the year we are currently displaying data for
 
-    @track todaysFilterDate = new Date();                           // the current date
-    @track currentFilterMonth = this.todaysFilterDate.getMonth();   // the month we are currently displaying data for
-    @track currentFilterYear = this.todaysFilterDate.getFullYear(); // the year we are currently displaying data for
-
     //**********************************************************************************************
     // Design attributes
     @api showOnlyMyRecords = false;
     @api allowEventCreation = false;
     @api isAdminView = false;
     @api isAttendeeView = false;
-
-    //**********************************************************************************************
-    // Constant values
-    daysOfWeekList = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; // months array that holds names of the months (can be changed)
-    monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; // moths array that holds names of the months (can be changed)
 
     //**********************************************************************************************
     // Getters
@@ -72,9 +69,9 @@ export default class CalendarContainer extends LightningElement {
 
     get yearsPicklistOptions() {
         let optionsList = [];
-        let startingYear = this.currentFilterYear - 5;
+        let startingYear = (this.todaysDate.getFullYear()) - 1;
 
-        for(let i = 0; i < 10; i++){
+        for(let i = 0; i < 3; i++){
             optionsList.push({ label: startingYear + i, value: startingYear + i });
         }
 
@@ -88,6 +85,7 @@ export default class CalendarContainer extends LightningElement {
         adminViewShown: '$isAdminView',
         currentMonth: '$currentMonth',
         currentYear: '$currentYear',
+        changedRecordId: '$deletedRecordId',
     })
     wiredData(value) {
         this.wiredReference = value;
@@ -165,6 +163,14 @@ export default class CalendarContainer extends LightningElement {
 
     handleYearSelectionChange(event){
         this.currentYear = event.detail.value;
+    }
+
+    handleForceRefreshData(){
+        this.refreshDataHelper();
+    }
+
+    handleRecordDeleted(event){
+        this.deletedRecordId = event.detail;
     }
     
     //----------------------------------------------------------------------------------------------------
