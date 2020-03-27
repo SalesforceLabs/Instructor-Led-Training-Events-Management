@@ -104,7 +104,7 @@
     <template if:true={showEventSelectModal}>
         <c-event-selection-modal oncancel={handleCloseEventSelectModal} onclose={handleCloseEventSelectModal}
             object-data={objectData} modal-selection-type={modalSelectionType} modal-data={modalData}
-            is-admin-view={isAdminView} is-attendee-view={isAttendeeView} onrecorddeleted={handleRecordDeleted}>
+            is-admin-view={isAdminView} is-attendee-view={isAttendeeView} onrecordchanged={handleRecordChanged}>
         </c-event-selection-modal>
     </template>
 

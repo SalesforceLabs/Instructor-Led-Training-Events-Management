@@ -6,7 +6,6 @@ public with sharing class CalendarCtrl {
         @description: Used to retreive a list of data for the respective object whos api name is passed to the function
         
         @param: showUserRecordsOnly - A boolean to decide whether or not to render the owners records
-        @param: adminViewShown - Determines whether or not we have to query the attendees list also
         @param: currentMonth - Current month as a number (0-11)
         @param: currentYear - Current year as a number e.g 2020
         @param: changedRecordId - Any records that have changed forcing this to be fired
@@ -16,7 +15,6 @@ public with sharing class CalendarCtrl {
     @AuraEnabled(cacheable=true)
     public static List<DateWrapper> getCalendarData(
         Boolean showUserRecordsOnly,
-        Boolean adminViewShown,
         Integer currentMonth,
         Integer currentYear,
         String changedRecordId){
@@ -28,18 +26,19 @@ public with sharing class CalendarCtrl {
             // increment month as it is one number lower in javascript
             currentMonth ++;
 
+            System.debug('Current Month: ' + currentMonth);
+            System.debug('Current Year: ' + currentYear);
+
             // Result list from the query
             List<Training_Event_Occurrence__c> eventOccuranceList = getTrainingEventOccurances(currentMonth, currentYear, showUserRecordsOnly);
 
             // Result list from the query
-            Map<Id, Contact> attendeeList = null;
+            Map<Id, User> attendeeList = null;
 
-            if(adminViewShown == true) {
-                attendeeList = getTrainingEventAttendeeContacts(eventOccuranceList);
-            }
+            attendeeList = getTrainingEventAttendeeUsers(eventOccuranceList);
             
             // return a wrapper to the child cmp
-            return convertResultsToWrapper(eventOccuranceList, attendeeList, currentMonth, currentYear, adminViewShown);
+            return convertResultsToWrapper(eventOccuranceList, attendeeList, currentMonth, currentYear);
     }
 
 
@@ -66,7 +65,7 @@ public with sharing class CalendarCtrl {
                 resultList = [
                     SELECT
                         Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c, Number_Sign_Ups__c, Number_Attendees__c, Event_Full__c,
-                              ( SELECT Id, Attendance_Confirmed__c, Sign_Up_Confirmed__c, Related_Contact__c FROM Training_Event_Attendees__r)
+                              ( SELECT Id, Attendance_Confirmed__c, Sign_Up_Confirmed__c, Related_User__c FROM Training_Event_Attendees__r)
                     FROM Training_Event_Occurrence__c
                     WHERE CALENDAR_MONTH(Start_Date_Time__c) =: currentMonth AND CALENDAR_YEAR(Start_Date_Time__c) =: currentYear AND Training_Event_Occurrence__c.Instructor__c = :userId 
                     WITH SECURITY_ENFORCED
@@ -77,7 +76,7 @@ public with sharing class CalendarCtrl {
                 resultList = [
                     SELECT
                         Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c, Number_Sign_Ups__c, Number_Attendees__c, Event_Full__c,
-                              ( SELECT Id, Attendance_Confirmed__c, Sign_Up_Confirmed__c, Related_Contact__c FROM Training_Event_Attendees__r)
+                              ( SELECT Id, Attendance_Confirmed__c, Sign_Up_Confirmed__c, Related_User__c FROM Training_Event_Attendees__r)
                     FROM Training_Event_Occurrence__c
                     WHERE CALENDAR_MONTH(Start_Date_Time__c) =: currentMonth AND CALENDAR_YEAR(Start_Date_Time__c) =: currentYear
                     WITH SECURITY_ENFORCED
@@ -98,50 +97,50 @@ public with sharing class CalendarCtrl {
 
 
     /*
-        @name: getTrainingEventAttendeeContacts
+        @name: getTrainingEventAttendeeUsers
         @createdBy: Daniel Tilley
         @description: Used to obtain a list of training event attendees
         
         @param: eventsList - list of events that have been returned from a previous query
 
-        @returns: Map<Id, Contact> - Returns all contact info for the attendees
+        @returns: Map<Id, User> - Returns all contact info for the attendees
     */
-    private static Map<Id, Contact> getTrainingEventAttendeeContacts(List<Training_Event_Occurrence__c> eventsList){
+    private static Map<Id, User> getTrainingEventAttendeeUsers(List<Training_Event_Occurrence__c> eventsList){
         
-        Map<Id, Contact> returnList = new Map<Id, Contact>();
-        List<Contact> resultList = new List<Contact>();
-        List<Id> contactIdsList = new List<Id>();
+        Map<Id, User> returnList = new Map<Id, User>();
+        List<User> resultList = new List<User>();
+        List<Id> userIdsList = new List<Id>();
 
-        // add contact ids to list for the query
+        // add user ids to list for the query
         for (Training_Event_Occurrence__c eventOccur : eventsList){
             if(eventOccur.Training_Event_Attendees__r.size() > 0){
                 for(Training_Event_Attendee__c eventAttendee: eventOccur.Training_Event_Attendees__r){
-                    contactIdsList.add(eventAttendee.Related_Contact__c);
+                    userIdsList.add(eventAttendee.Related_User__c);
                 }
             } 
         }
 
         //remove duplicates
-        contactIdsList = new List<Id>(new Set<Id>(contactIdsList));
+        userIdsList = new List<Id>(new Set<Id>(userIdsList));
 
         // Try to execute to query and catch any errors
         try {
             
             resultList = [
                 SELECT Id, Name, Email
-                FROM Contact
-                WHERE Id IN :contactIdsList
+                FROM User
+                WHERE Id IN :userIdsList
             ];
 
-            for(Contact con: resultList){
-                returnList.put(con.Id, con);
+            for(User user: resultList){
+                returnList.put(user.Id, user);
             }
         } catch(QueryException e) {
             system.debug(e.getMessage());
             returnList = null;
         } // end try / catch
 
-        system.debug('CalendarCtrl - getTrainingEventAttendeeContacts(): returnList');
+        system.debug('CalendarCtrl - getTrainingEventAttendeeUsers(): returnList');
         system.debug(returnList);
 
         return returnList;
@@ -155,6 +154,7 @@ public with sharing class CalendarCtrl {
         @description: Used to transform a list of SObjects to a Wrapper List
         
         @param: eventOccuranceList - the results from the query
+        @param: attendeesList - List of users related to events
         @param: currentMonth - Current month as a number (0-11)
         @param: currentYear - Current year as a number e.g 2020
 
@@ -162,15 +162,15 @@ public with sharing class CalendarCtrl {
     */
     private static List<DateWrapper> convertResultsToWrapper(
         List<Training_Event_Occurrence__c> eventOccuranceList, 
-        Map<Id, Contact> attendeesList,
+        Map<Id, User> attendeesList,
         Integer currentMonth,
-        Integer currentYear,
-        Boolean adminViewShown) {
+        Integer currentYear) {
             
             // Create variables
             List<DateWrapper> returnList = new List<DateWrapper>(); // list to return
             Map<Integer, DateWrapper> tempMap = new Map<Integer, DateWrapper>(); // map that will use date as an index so that we can add multiple events quickly
             Integer numberDays = date.daysInMonth(currentYear, currentMonth); // number of days in the month so that we can create the map
+            Id currentUserId = UserInfo.getUserId(); // get user id to check if they are attending any events
 
             // loop through the number of days in a month and create a map list of similar size
             for(Integer i = 1 ; i < numberDays + 1 ; i ++) {
@@ -212,9 +212,11 @@ public with sharing class CalendarCtrl {
                         tempEventWrapper.NumSignUps = resultItem.Number_Sign_Ups__c;
                         tempEventWrapper.NumAttendees = resultItem.Number_Attendees__c;
                         tempEventWrapper.EventFull = true;
+                        tempEventWrapper.CurrentUserRegistered = false;
+                        tempEventWrapper.CurrentUserAttendee = null;
 
                         // Loop through attendees and add them to the wrapper
-                        if(resultItem.Training_Event_Attendees__r.size() > 0 && adminViewShown == true){
+                        if(resultItem.Training_Event_Attendees__r.size() > 0){
 
                             tempEventWrapper.Attendees = new List<AttendeesWrapper>();
 
@@ -226,8 +228,14 @@ public with sharing class CalendarCtrl {
                                 tempAttendeeWrapper.Id = eventAttendee.Id;
                                 tempAttendeeWrapper.AttendanceConfirmed = eventAttendee.Attendance_Confirmed__c	;
                                 tempAttendeeWrapper.SignUpConfirmed = eventAttendee.Sign_Up_Confirmed__c;
-                                tempAttendeeWrapper.Name = attendeesList.get(eventAttendee.Related_Contact__c).Name;
-                                tempAttendeeWrapper.EmailAddress = attendeesList.get(eventAttendee.Related_Contact__c).Email;
+                                tempAttendeeWrapper.Name = attendeesList.get(eventAttendee.Related_User__c).Name;
+                                tempAttendeeWrapper.EmailAddress = attendeesList.get(eventAttendee.Related_User__c).Email;
+
+                                // add current user info to event wrapper if the user is registered
+                                if(currentUserId == eventAttendee.Related_User__c){
+                                    tempEventWrapper.CurrentUserRegistered = true;
+                                    tempEventWrapper.CurrentUserAttendee = tempAttendeeWrapper;
+                                }
 
                                 tempEventWrapper.Attendees.add(tempAttendeeWrapper);
                             }

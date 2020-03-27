@@ -38,7 +38,7 @@ export default class CalendarContainer extends LightningElement {
     @track showEventCreateModal = false;    // used to determine whther or not to show the event create modal
     @track modalSelectionType = 'events';   // used to determine what type of modal to show (either a single event or events)
     @track modalData;                       // the data to be passed to the modal
-    @track deletedRecordId = '';            // will be updated when a child cmp delete a record
+    @track changedRecordId = '';            // will be updated when a child cmp changed a record
 
     //**********************************************************************************************
     // Date Variables
@@ -82,10 +82,9 @@ export default class CalendarContainer extends LightningElement {
     // Wire Variables
     @wire(getCalendarData, { 
         showUserRecordsOnly: '$showOnlyMyRecords',
-        adminViewShown: '$isAdminView',
         currentMonth: '$currentMonth',
         currentYear: '$currentYear',
-        changedRecordId: '$deletedRecordId',
+        changedRecordId: '$changedRecordId',
     })
     wiredData(value) {
         this.wiredReference = value;
@@ -169,8 +168,8 @@ export default class CalendarContainer extends LightningElement {
         this.refreshDataHelper();
     }
 
-    handleRecordDeleted(event){
-        this.deletedRecordId = event.detail;
+    handleRecordChanged(event){
+        this.changedRecordId = event.detail;
     }
     
     //----------------------------------------------------------------------------------------------------

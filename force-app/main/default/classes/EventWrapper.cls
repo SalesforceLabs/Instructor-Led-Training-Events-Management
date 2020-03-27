@@ -28,4 +28,10 @@ public with sharing class EventWrapper {
 
     @AuraEnabled
     public List<AttendeesWrapper> Attendees { get; set; }
+
+    @AuraEnabled
+    public Boolean CurrentUserRegistered { get; set; }
+
+    @AuraEnabled
+    public AttendeesWrapper CurrentUserAttendee { get; set; }
 }

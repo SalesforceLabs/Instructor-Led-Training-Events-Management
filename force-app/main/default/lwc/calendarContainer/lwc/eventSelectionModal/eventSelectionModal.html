@@ -22,8 +22,8 @@
                                 <lightning-accordion-section name="details" label="Details">
 
                                     <section class="slds-p-around_small max-width">
-                                        <lightning-record-form record-id={modalData.Id} object-api-name={objectData.apiName}
-                                            layout-type="Full" mode="view">
+                                        <lightning-record-form record-id={modalData.Id}
+                                            object-api-name={objectData.apiName} layout-type="Full" mode="view">
                                         </lightning-record-form>
                                     </section>
 
@@ -32,7 +32,8 @@
                                 <lightning-accordion-section name="attendees" label="Attendees">
 
                                     <section class="slds-p-around_small max-width">
-                                        <c-attendee-list-view attendee-list={modalData.Attendees} onattendeeremoved={handleAttendeeDeleted}></c-attendee-list-view>
+                                        <c-attendee-list-view attendee-list={modalData.Attendees}
+                                            onattendeeremoved={handleAttendeeDeleted}></c-attendee-list-view>
                                     </section>
 
                                 </lightning-accordion-section>
@@ -71,7 +72,8 @@
 
                                                 <template if:true={showRecordData}>
                                                     <lightning-record-form record-id={selectedRecordId}
-                                                        object-api-name={objectData.apiName} layout-type="Full" mode="view">
+                                                        object-api-name={objectData.apiName} layout-type="Full"
+                                                        mode="view">
                                                     </lightning-record-form>
                                                 </template>
 
@@ -82,15 +84,17 @@
                                             </section>
 
                                         </lightning-accordion-section>
-        
+
                                         <lightning-accordion-section name="attendees" label="Attendees">
 
                                             <section class="slds-p-around_small max-width">
 
                                                 <template if:true={showAttendeeData}>
-                                                    <c-attendee-list-view attendee-list={selectedAttendeeList} onattendeeremoved={handleAttendeeDeleted}></c-attendee-list-view>
+                                                    <c-attendee-list-view attendee-list={selectedAttendeeList}
+                                                        onattendeeremoved={handleAttendeeDeleted}>
+                                                    </c-attendee-list-view>
                                                 </template>
-                                                
+
                                                 <template if:false={showAttendeeData}>
                                                     Please select an event...
                                                 </template>
@@ -99,7 +103,7 @@
 
                                         </lightning-accordion-section>
                                     </lightning-accordion>
-                                   
+
                                 </div>
                             </div>
                         </template>
@@ -116,9 +120,30 @@
                             </header>
 
                             <section class="slds-p-around_small max-width">
-                                <lightning-record-form record-id={modalData.Id} object-api-name={objectData.apiName}
-                                    layout-type="Full" mode="view">
-                                </lightning-record-form>
+                                <div class="slds-p-vertical_x-small border-bottom">
+
+                                    <h2 class="slds-p-vertical_small slds-text-heading_small slds-text-align_center text-bold">
+                                        Details
+                                    </h2>
+
+                                    <lightning-record-form class="slds-p-bottom_x-small" record-id={modalData.Id} object-api-name={objectData.apiName}
+                                        layout-type="Full" mode="view">
+                                    </lightning-record-form>
+
+                                </div>
+
+                                <div class="slds-p-vertical_x-small">
+
+                                    <h2 class="slds-p-vertical_small slds-text-heading_small slds-text-align_center text-bold">
+                                        Attendance
+                                    </h2>
+                                    
+                                    <c-attendee-info-view current-user-attending={modalData.CurrentUserRegistered}
+                                        current-user-attendee-info={modalData.CurrentUserAttendee}
+                                        event-id={modalData.Id}>
+                                    </c-attendee-info-view>
+
+                                </div>
                             </section>
                         </template>
 
@@ -149,10 +174,37 @@
                                     <section class="slds-p-around_small max-width">
 
                                         <template if:true={showRecordData}>
-                                            <lightning-record-form record-id={selectedRecordId}
-                                                object-api-name={objectData.apiName} layout-type="Full" mode="view">
-                                            </lightning-record-form>
+                                            <div class="slds-p-vertical_x-small border-bottom">
+
+                                                <h2 class="slds-p-vertical_small slds-text-heading_small slds-text-align_center text-bold">
+                                                    Details
+                                                </h2>
+
+                                                <lightning-record-form class="slds-p-bottom_x-small" record-id={selectedRecordId}
+                                                    object-api-name={objectData.apiName} layout-type="Full" mode="view">
+                                                </lightning-record-form>
+
+                                            </div>
+
+                                            <div class="slds-p-vertical_x-small">
+
+                                                <h2 class="slds-p-vertical_small slds-text-heading_small slds-text-align_center text-bold">
+                                                    Attendance
+                                                </h2>
+
+                                                <c-attendee-info-view
+                                                    current-user-attending={selectedRecord.CurrentUserRegistered}
+                                                    current-user-attendee-info={selectedRecord.CurrentUserAttendee}
+                                                    event-id={selectedRecordId}>
+                                                </c-attendee-info-view>
+
+                                            </div>
                                         </template>
+
+                                        <template if:false={showAttendeeData}>
+                                            Please select an event...
+                                        </template>
+
                                     </section>
                                 </div>
                             </div>

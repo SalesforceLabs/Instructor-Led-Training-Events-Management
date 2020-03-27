@@ -8,6 +8,7 @@ export default class EventSelectionModal extends LightningElement {
 
     //**********************************************************************************************
     // RECORD VARS
+    @track selectedRecord;
     @track selectedRecordId;
     @track selectedAttendeeList;
     @api objectData;
@@ -75,7 +76,7 @@ export default class EventSelectionModal extends LightningElement {
     //----------------------------------------------------------------------------------------------------
 
     handleAttendeeDeleted(event){
-        const parentEvent = new CustomEvent("recorddeleted", { detail : event.detail });
+        const parentEvent = new CustomEvent("recordchanged", { detail : event.detail });
         this.dispatchEvent(parentEvent);
         this.closeClickedHandler();
     }
@@ -90,7 +91,11 @@ export default class EventSelectionModal extends LightningElement {
 
     eventClicked(event) {
         this.selectedRecordId = event.currentTarget.dataset.id;
-        let tempList = this.modalData.data.fullList.find( item => item.Id === this.selectedRecordId).Attendees;
+        this.selectedRecord = this.modalData.data.fullList.find( item => item.Id === this.selectedRecordId);
+
+        console.log(this.selectedRecord);
+
+        let tempList = this.selectedRecord.Attendees;
 
         // To get over the render condition (if both items are undefined)
         if(tempList === undefined){
