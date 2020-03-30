@@ -138,7 +138,9 @@
                                         Attendance
                                     </h2>
                                     
-                                    <c-attendee-info-view current-user-attending={modalData.CurrentUserRegistered}
+                                    <c-attendee-info-view 
+                                        onattendanceremoved={handleAttendeeDeleted}
+                                        current-user-attending={modalData.CurrentUserRegistered}
                                         current-user-attendee-info={modalData.CurrentUserAttendee}
                                         event-id={modalData.Id}>
                                     </c-attendee-info-view>
@@ -193,6 +195,7 @@
                                                 </h2>
 
                                                 <c-attendee-info-view
+                                                    onattendanceremoved={handleAttendeeDeleted}
                                                     current-user-attending={selectedRecord.CurrentUserRegistered}
                                                     current-user-attendee-info={selectedRecord.CurrentUserAttendee}
                                                     event-id={selectedRecordId}>

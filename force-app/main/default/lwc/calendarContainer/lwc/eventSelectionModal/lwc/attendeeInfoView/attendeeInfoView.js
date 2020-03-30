@@ -1,5 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { createRecord } from 'lightning/uiRecordApi';
+import { deleteRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import Id from '@salesforce/user/Id';
@@ -26,6 +27,9 @@ export default class AttendeeInfoView extends LightningElement {
     @track newSignUpConfirmationStatus = false;
     @track newAttendanceConfirmationStatus = false;
 
+    @track showAttendanceConfirmInput = false;
+    @track attendanceConfirmationCode;
+
     //**********************************************************************************************
     // GETTERS
     get signUpConfirmed() {
@@ -50,6 +54,24 @@ export default class AttendeeInfoView extends LightningElement {
         if(this.currentUserAttendeeInfo === undefined){
             return this.newAttendanceConfirmationStatus; 
         } else { return this.currentUserAttendeeInfo.AttendanceConfirmed }
+    }
+
+    get currentUserAttendanceConfirmButtonDisabled() {
+        if( this.currentUserAttendanceConfirmationStatus === true ) {
+            console.log('ATTENDANCE CONFIEMED');
+            return true;    
+        } else {
+            console.log('ATTENDANCE NOT CONFIEMED');
+
+            if( this.currentUserSignUpConfirmationStatus === false ) { 
+                console.log('SIGN UP NOT CONFIEMED');
+                return true; 
+            }
+            else { 
+                console.log('SIGN UP CONFIEMED');
+                return false; 
+            }
+        }
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -88,14 +110,49 @@ export default class AttendeeInfoView extends LightningElement {
 
 
     handleUserCancelSignUpClicked() {
+        if(confirm('Are you sure you want to cancel your attendance?')){
+            let tempRecordID = this.currentUserAttendeeId;
 
-    }
+            deleteRecord(tempRecordID)
+            .then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'You have sucessfully cancelled your sign up for this event!',
+                        variant: 'success',
+                    }),
+                );
 
-    handleUserSignUpConfirmationClicked() {
+                const deletedEvent = new CustomEvent('attendanceremoved', { detail: tempRecordID });
+                this.dispatchEvent(deletedEvent);
+            })
+            .catch(error => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: "Something Went Wrong",
+                        message: "Hmmmm, Looks like something went wrong, please try again!",
+                        variant: "error"
+                    }),
+                );
 
+                window.console.log(error)
+            });
+        }
     }
 
     handleUserAttendanceConfirmationClicked() {
+        this.showAttendanceConfirmInput = true;
+    }
 
+    attendanceCodeChanged(event) {
+        this.attendanceConfirmationCode = event.target.value;
+    }
+
+    handleAttendanceCodeSubmitClicked() {
+        
+    }
+
+    handleAttendanceCodeCancelClicked() {
+        this.showAttendanceConfirmInput = false;
     }
 }
