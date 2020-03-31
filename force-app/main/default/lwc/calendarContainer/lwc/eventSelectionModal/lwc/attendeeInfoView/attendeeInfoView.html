@@ -1,9 +1,18 @@
 <template>
     <section class="slds-p-around_xx-small">
         <template if:true={signUpConfirmed}>
-            <div class="slds-p-vertical_xx-small slds-text-align_center text-bold">
-                Looks like you've already signed up! What would you like to do?
-            </div>
+            <template if:true={currentUserAttendanceConfirmationStatus}>
+                <div class="slds-p-vertical_xx-small slds-text-align_center text-bold">
+                    Thanks for confirming your attendance. We hope you enjoyed the event!
+                </div>
+            </template>
+
+            <template if:false={currentUserAttendanceConfirmationStatus}>
+                <div class="slds-p-vertical_xx-small slds-text-align_center text-bold">
+                    Looks like you've already signed up! What would you like to do?
+                </div>
+            </template>
+            
 
             <template if:false={currentUserSignUpConfirmationStatus}>
                 <div class="slds-p-vertical_xx-small slds-text-align_center text-bold slds-text-color_error">
@@ -15,7 +24,7 @@
                 <div class="slds-grid">
 
                     <div class="slds-col slds-p-around_xx-small">
-                        <button class="slds-button slds-button_neutral" onclick={handleUserCancelSignUpClicked}>
+                        <button class="slds-button slds-button_neutral" onclick={handleUserCancelSignUpClicked} disabled={cancelSignUpButtonDisabled}>
                             <span class="slds-p-vertical_xx-small">
                                 <span class="slds-p-right_xx-small">
                                     <lightning-icon icon-name="utility:leave_conference" alternative-text="Cancel Sign Up" size="xx-small"></lightning-icon>

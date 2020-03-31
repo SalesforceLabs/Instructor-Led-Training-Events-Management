@@ -9,6 +9,8 @@ import TRAINING_EVENT_ATTENDEE_OBJ from '@salesforce/schema/Training_Event_Atten
 import RELATED_USER from '@salesforce/schema/Training_Event_Attendee__c.Related_User__c';
 import RELATED_TRAINING_EVENT_OCC from '@salesforce/schema/Training_Event_Attendee__c.Training_Event_Occurrence__c';
 
+import confirmAttendeeEventAttendance from '@salesforce/apex/EventOccuranceCtrl.confirmAttendeeEventAttendance';
+
 export default class AttendeeInfoView extends LightningElement {
 
     //----------------------------------------------------------------------------------------------------
@@ -53,25 +55,26 @@ export default class AttendeeInfoView extends LightningElement {
     get currentUserAttendanceConfirmationStatus() {
         if(this.currentUserAttendeeInfo === undefined){
             return this.newAttendanceConfirmationStatus; 
-        } else { return this.currentUserAttendeeInfo.AttendanceConfirmed }
+        } else {
+            return this.currentUserAttendeeInfo.AttendanceConfirmed;
+        }
     }
 
     get currentUserAttendanceConfirmButtonDisabled() {
         if( this.currentUserAttendanceConfirmationStatus === true ) {
-            console.log('ATTENDANCE CONFIEMED');
             return true;    
         } else {
-            console.log('ATTENDANCE NOT CONFIEMED');
-
             if( this.currentUserSignUpConfirmationStatus === false ) { 
-                console.log('SIGN UP NOT CONFIEMED');
                 return true; 
             }
             else { 
-                console.log('SIGN UP CONFIEMED');
                 return false; 
             }
         }
+    }
+
+    get cancelSignUpButtonDisabled() {
+        return this.currentUserAttendanceConfirmationStatus == true;
     }
 
     //----------------------------------------------------------------------------------------------------
@@ -123,7 +126,7 @@ export default class AttendeeInfoView extends LightningElement {
                     }),
                 );
 
-                const deletedEvent = new CustomEvent('attendanceremoved', { detail: tempRecordID });
+                const deletedEvent = new CustomEvent('attendanceupdated', { detail: tempRecordID });
                 this.dispatchEvent(deletedEvent);
             })
             .catch(error => {
@@ -135,7 +138,7 @@ export default class AttendeeInfoView extends LightningElement {
                     }),
                 );
 
-                window.console.log(error)
+                window.console.log(error);
             });
         }
     }
@@ -149,7 +152,44 @@ export default class AttendeeInfoView extends LightningElement {
     }
 
     handleAttendanceCodeSubmitClicked() {
-        
+        confirmAttendeeEventAttendance({ eventAttendeeId: this.currentUserAttendeeId, confirmationCode: this.attendanceConfirmationCode })
+        .then(result => {
+
+            if(result == true){
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'You have sucessfully confirmed your attendance for this event!',
+                        variant: 'success',
+                    }),
+                );
+                
+                this.showAttendanceConfirmInput = false;
+                this.newAttendanceConfirmationStatus = true;
+
+                const updatedEvent = new CustomEvent('attendanceupdated', { detail: this.currentUserAttendeeId });
+                this.dispatchEvent(updatedEvent);
+            } else {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: "Please Try Again!",
+                        message: "Hmmmm, Looks like the code you provided is incorrect, please ensure you have the correct confirmation code!",
+                        variant: "error"
+                    }),
+                );
+            }
+        })
+        .catch(error => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: "Something Went Wrong",
+                    message: "Hmmmm, Looks like something went wrong, please try again!",
+                    variant: "error"
+                }),
+            );
+
+            window.console.log(error);
+        })
     }
 
     handleAttendanceCodeCancelClicked() {
