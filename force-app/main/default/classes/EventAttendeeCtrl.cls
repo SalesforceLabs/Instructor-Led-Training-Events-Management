@@ -8,7 +8,7 @@ public with sharing class EventAttendeeCtrl {
         Network myNetwork = [SELECT Id FROM Network WHERE Name =: communityName ];
         ConnectApi.Community  myCommunity = ConnectApi.Communities.getCommunity(myNetwork.id);
 
-        String communityUrl = myCommunity.siteUrl + '/s/' + communityConfirmationPage + '=' + eventAttendeeId;
+        String communityUrl = myCommunity.siteUrl + '/s/' + communityConfirmationPage + '?attendeeId=' + eventAttendeeId;
 
         return communityUrl;
     }
