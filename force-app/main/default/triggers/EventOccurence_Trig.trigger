@@ -4,5 +4,7 @@ trigger EventOccurence_Trig on Training_Event_Occurrence__c (before insert) {
         if(newOccurance.Attendance_Confirmation_Code__c == null) {
             newOccurance.Attendance_Confirmation_Code__c = EventOccuranceCtrl.generateAttendanceConfirmationCode(6);
         }
+
+        System.debug(newOccurance.Id);
     }
 }

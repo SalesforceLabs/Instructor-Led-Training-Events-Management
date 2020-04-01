@@ -1,0 +1,11 @@
+<template>
+    <section class="slds-p-around_medium slds-align_absolute-center">
+        <template if:false={signUpConfirmed}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+    
+        <template if:true={signUpConfirmed}>
+            Thanks for confirming your signup! We hope you enjoy the event.
+        </template>
+    </section>
+</template>
