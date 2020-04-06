@@ -1,10 +1,6 @@
 import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-
-import { updateRecord } from 'lightning/uiRecordApi';
-
-import ID_FIELD from '@salesforce/schema/Training_Event_Attendee__c.Id';
-import SIGN_UP_CONFIRMATION from '@salesforce/schema/Training_Event_Attendee__c.Sign_Up_Confirmed__c';
+import confirmAttendeeSignUp from '@salesforce/apex/EventAttendeeCtrl.confirmAttendeeSignUp';
 
 export default class AttendeeSignUpConfirmation extends LightningElement {
 
@@ -17,6 +13,7 @@ export default class AttendeeSignUpConfirmation extends LightningElement {
 
     @track parameters = {};
     @track signUpConfirmed = false;
+    @track showNoRecordsMessage = false;
 
     //----------------------------------------------------------------------------------------------------
     // HOOKS
@@ -27,36 +24,12 @@ export default class AttendeeSignUpConfirmation extends LightningElement {
 
         if ('attendeeId' in this.parameters){
             if (this.parameters.attendeeId !== undefined ){
-
-                const fields = {};
-
-                fields[ID_FIELD.fieldApiName] = this.parameters.attendeeId;
-                fields[SIGN_UP_CONFIRMATION.fieldApiName] = true;
-
-                const recordInput = { fields };
-
-                updateRecord(recordInput)
-                    .then(() => {
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: 'Success',
-                                message: 'You have successfully confirmed your sign up details!',
-                                variant: 'success'
-                            })
-                        );
-
-                        this.signUpConfirmed = true;
-                    })
-                    .catch(error => {
-                        this.dispatchEvent(
-                            new ShowToastEvent({
-                                title: "Something Went Wrong",
-                                message: "Hmmmm, Looks like something went wrong, please try again!",
-                                variant: "error"
-                            }),
-                        );
-                    });
+                this.checkUserDetails(this.parameters.attendeeId);
+            } else {
+                this.showNoRecordsMessage = false;
             }
+        } else {
+            this.showNoRecordsMessage = false;
         }
     }
 
@@ -77,7 +50,44 @@ export default class AttendeeSignUpConfirmation extends LightningElement {
         return params;
     }
 
-    checkUserDetails() {
+    checkUserDetails(attendeeRecordId) {
+        confirmAttendeeSignUp({ attendeeRecordId : attendeeRecordId })
+            .then(result => {
+                if(result.signUpAlreadyConfirmed === true){
+                    this.signUpConfirmed = true;
+                } 
+                if(result.signUpConfirmed === true){
+                    this.showSuccessMessage();
+                    this.signUpConfirmed = true;
+                } 
+                if(result.noRecordFound === true){
+                    this.signUpConfirmed = true;
+                    this.showNoRecordsMessage = true;
+                }
+            })
+            .catch(error => {
+                this.showErrorMessage();
+                console.log(error);
+            });
+    }
 
+    showSuccessMessage(){
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Success',
+                message: 'You have successfully confirmed your sign up details!',
+                variant: 'success'
+            })
+        );
+    }
+
+    showErrorMessage() {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: "Something Went Wrong",
+                message: "Hmmmm, Looks like something went wrong, please try again!",
+                variant: "error"
+            }),
+        );
     }
 }

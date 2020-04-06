@@ -12,4 +12,44 @@ public with sharing class EventAttendeeCtrl {
 
         return communityUrl;
     }
+
+    @AuraEnabled
+    public static EventAttendeeReturnWrapper confirmAttendeeSignUp(Id attendeeRecordId){
+
+        EventAttendeeReturnWrapper returnWrapper = new EventAttendeeReturnWrapper();
+        returnWrapper.eventAttendeeId = attendeeRecordId;
+
+        Training_Event_Attendee__c currentAttendee = null;
+
+        // get the current attendee
+        try{
+            currentAttendee = [
+                SELECT Id, Sign_Up_Confirmed__c
+                FROM Training_Event_Attendee__c
+                WHERE Id =: attendeeRecordId
+                WITH SECURITY_ENFORCED
+            ];
+        }catch(QueryException e){
+            system.debug(e.getMessage());
+        }
+         
+
+        // check records returned
+        if (currentAttendee != null ){
+            // check if user already signed up
+            if(currentAttendee.Sign_Up_Confirmed__c == true) {
+                returnWrapper.signUpAlreadyConfirmed = true;
+            } else {
+                // sign user up
+                currentAttendee.Sign_Up_Confirmed__c = true;
+                update currentAttendee;
+                returnWrapper.signUpConfirmed = true;
+            }
+        // no records found
+        } else {
+            returnWrapper.noRecordFound = true;
+        }
+
+        return returnWrapper;
+    }
 }

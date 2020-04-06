@@ -1,11 +1,58 @@
 <template>
-    <section class="slds-p-around_medium slds-align_absolute-center">
-        <template if:false={signUpConfirmed}>
-            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
-        </template>
-    
-        <template if:true={signUpConfirmed}>
-            Thanks for confirming your signup! We hope you enjoy the event.
-        </template>
+    <section class="slds-p-around_medium">
+        <div class="slds-grid slds-grid_vertical slds-align_absolute-center">
+            <div class="slds-col">
+                <div class="slds-p-vertical_xx-small slds-text-heading_medium"
+                    style="border-bottom: 1px solid rgba(0,0,0,.06);">
+                    Event Signup Confirmation
+                </div>
+            </div>
+
+
+            <template if:false={signUpConfirmed}>
+
+                <div class="slds-col">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
+
+            </template>
+
+            <template if:true={signUpConfirmed}>
+                <template if:true={showNoRecordsMessage}>
+
+                    <div class="slds-col">
+                        <div class="slds-p-vertical_small slds-text-heading_small">
+                            Looks like we couldn't find any signups!
+                        </div>
+                    </div>
+
+                    <div class="slds-col">
+                        <div class="slds-p-vertical_small">
+                            <lightning-icon icon-name="utility:error" alternative-text="Error!" variant="error"
+                                title="error variant medium" size="medium"></lightning-icon>
+                        </div>
+                    </div>
+
+                </template>
+
+                <template if:false={showNoRecordsMessage}>
+
+                    <div class="slds-col">
+                        <div class="slds-p-vertical_small slds-text-heading_small">
+                            Thanks for confirming your signup! We hope you enjoy the event.
+                        </div>
+                    </div>
+
+                    <div class="slds-col">
+                        <div class="slds-p-vertical_small">
+                            <lightning-icon icon-name="utility:success" alternative-text="Success!" variant="success"
+                                title="success variant medium" size="medium"></lightning-icon>
+                        </div>
+                    </div>
+
+                </template>
+            </template>
+
+        </div>
     </section>
 </template>
