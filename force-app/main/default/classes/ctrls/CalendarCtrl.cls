@@ -12,6 +12,7 @@ public with sharing class CalendarCtrl {
 
         @returns: List<DateWrapper> - Returns all info for the current month in a wrapper list
     */
+
     @AuraEnabled(cacheable=true)
     public static List<DateWrapper> getCalendarData(
         Boolean showUserRecordsOnly,
@@ -30,124 +31,17 @@ public with sharing class CalendarCtrl {
             System.debug('Current Year: ' + currentYear);
 
             // Result list from the query
-            List<Training_Event_Occurrence__c> eventOccuranceList = getTrainingEventOccurances(currentMonth, currentYear, showUserRecordsOnly);
+            List<Training_Event_Occurrence__c> eventOccuranceList = EventOccuranceCtrl.getTrainingEventOccurancesWithDate(currentMonth, currentYear, showUserRecordsOnly);
 
             // Result list from the query
-            Map<Id, User> attendeeList = null;
-
-            attendeeList = getTrainingEventAttendeeUsers(eventOccuranceList);
+            Map<Id, User> attendeeList = EventAttendeeCtrl.getTrainingEventAttendeeUsersMap(eventOccuranceList);
             
             // return a wrapper to the child cmp
             return convertResultsToWrapper(eventOccuranceList, attendeeList, currentMonth, currentYear);
     }
 
 
-
-    /*
-        @name: getTrainingEventOccurances
-        @createdBy: Daniel Tilley
-        @description: Used to obtain a list of training event occurences
-        
-        @param: currentMonth - Current month as a number (0-11)
-        @param: currentYear - Current year as a number e.g 2020
-
-        @returns: List<Training_Event_Occurrence__c> - Returns all info for the current month in an object list
-    */
-    private static List<Training_Event_Occurrence__c> getTrainingEventOccurances(Integer currentMonth, Integer currentYear, Boolean showUserRecordsOnly){
-        // Try to execute to query and catch any errors
-        List<Training_Event_Occurrence__c> resultList = null;
-
-        try {
-            if(showUserRecordsOnly == true){
-
-                Id userId = UserInfo.getUserId();
-
-                resultList = [
-                    SELECT
-                        Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c, Number_Sign_Ups__c, Number_Attendees__c, Event_Full__c,
-                              ( SELECT Id, Attendance_Confirmed__c, Sign_Up_Confirmed__c, Related_User__c FROM Training_Event_Attendees__r)
-                    FROM Training_Event_Occurrence__c
-                    WHERE CALENDAR_MONTH(Start_Date_Time__c) =: currentMonth AND CALENDAR_YEAR(Start_Date_Time__c) =: currentYear AND Training_Event_Occurrence__c.Instructor__c = :userId 
-                    WITH SECURITY_ENFORCED
-                ];
-
-            } else {
-
-                resultList = [
-                    SELECT
-                        Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c, Number_Sign_Ups__c, Number_Attendees__c, Event_Full__c,
-                              ( SELECT Id, Attendance_Confirmed__c, Sign_Up_Confirmed__c, Related_User__c FROM Training_Event_Attendees__r)
-                    FROM Training_Event_Occurrence__c
-                    WHERE CALENDAR_MONTH(Start_Date_Time__c) =: currentMonth AND CALENDAR_YEAR(Start_Date_Time__c) =: currentYear
-                    WITH SECURITY_ENFORCED
-                ];
-
-            }
-        } catch(QueryException e) {
-            system.debug(e.getMessage());
-            resultList = null;
-        } // end try / catch
-
-        system.debug('CalendarCtrl - getTrainingEventOccurances(): resultList');
-        system.debug(resultList);
-
-        return resultList;
-    }
-
-
-
-    /*
-        @name: getTrainingEventAttendeeUsers
-        @createdBy: Daniel Tilley
-        @description: Used to obtain a list of training event attendees
-        
-        @param: eventsList - list of events that have been returned from a previous query
-
-        @returns: Map<Id, User> - Returns all contact info for the attendees
-    */
-    private static Map<Id, User> getTrainingEventAttendeeUsers(List<Training_Event_Occurrence__c> eventsList){
-        
-        Map<Id, User> returnList = new Map<Id, User>();
-        List<User> resultList = new List<User>();
-        List<Id> userIdsList = new List<Id>();
-
-        // add user ids to list for the query
-        for (Training_Event_Occurrence__c eventOccur : eventsList){
-            if(eventOccur.Training_Event_Attendees__r.size() > 0){
-                for(Training_Event_Attendee__c eventAttendee: eventOccur.Training_Event_Attendees__r){
-                    userIdsList.add(eventAttendee.Related_User__c);
-                }
-            } 
-        }
-
-        //remove duplicates
-        userIdsList = new List<Id>(new Set<Id>(userIdsList));
-
-        // Try to execute to query and catch any errors
-        try {
-            
-            resultList = [
-                SELECT Id, Name, Email
-                FROM User
-                WHERE Id IN :userIdsList
-            ];
-
-            for(User user: resultList){
-                returnList.put(user.Id, user);
-            }
-        } catch(QueryException e) {
-            system.debug(e.getMessage());
-            returnList = null;
-        } // end try / catch
-
-        system.debug('CalendarCtrl - getTrainingEventAttendeeUsers(): returnList');
-        system.debug(returnList);
-
-        return returnList;
-    }
-
-
-
+    
     /*
         @name: convertResultsToWrapper
         @createdBy: Daniel Tilley
@@ -167,10 +61,10 @@ public with sharing class CalendarCtrl {
         Integer currentYear) {
             
             // Create variables
-            List<DateWrapper> returnList = new List<DateWrapper>(); // list to return
-            Map<Integer, DateWrapper> tempMap = new Map<Integer, DateWrapper>(); // map that will use date as an index so that we can add multiple events quickly
-            Integer numberDays = date.daysInMonth(currentYear, currentMonth); // number of days in the month so that we can create the map
-            Id currentUserId = UserInfo.getUserId(); // get user id to check if they are attending any events
+            List<DateWrapper> returnList = new List<DateWrapper>();                 // list to return
+            Map<Integer, DateWrapper> tempMap = new Map<Integer, DateWrapper>();    // map that will use date as an index so that we can add multiple events quickly
+            Integer numberDays = date.daysInMonth(currentYear, currentMonth);       // number of days in the month so that we can create the map
+            Id currentUserId = UserInfo.getUserId();                                // get user id to check if they are attending any events
 
             // loop through the number of days in a month and create a map list of similar size
             for(Integer i = 1 ; i < numberDays + 1 ; i ++) {
