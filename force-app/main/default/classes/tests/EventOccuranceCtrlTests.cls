@@ -109,6 +109,15 @@ public class EventOccuranceCtrlTests {
 
 
     @isTest
+    static void getMyTrainingEventOccurancesWithDateTest(){
+        List<Training_Event_Occurrence__c> testEventOccuranceList = EventOccuranceCtrl.getTrainingEventOccurancesWithDate(1, 2010, true);
+
+        System.assertEquals(0, testEventOccuranceList.size(), 'Number of my occurances does not match');
+    }
+
+
+
+    @isTest
     static void getTrainingEventOccurancesWithDateNegativeTest(){
         List<Training_Event_Occurrence__c> testEventOccuranceList = EventOccuranceCtrl.getTrainingEventOccurancesWithDate(2, 2011, false);
 
