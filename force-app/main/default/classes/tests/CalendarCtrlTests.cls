@@ -66,7 +66,10 @@ public class CalendarCtrlTests {
                     System.assertEquals('Test Event', curEventWrapper.Name, 'Event Name does not match');
                     System.assertEquals(startTestTime, curEventWrapper.StartTime, 'Event Start Time does not match');
                     System.assertEquals(endTestTime, curEventWrapper.EndTime, 'Event End Time does not match');
-
+                    System.assertEquals(1, curEventWrapper.Attendees.size(), 'Num Attendees does not match');
+                    System.assertEquals(0, curEventWrapper.NumSignUps, 'Num Confirmed Signups does not match');
+                    System.assertEquals(0, curEventWrapper.NumAttendees, 'Num Confirmed Attendees does not match');
+                    
                     for(AttendeesWrapper curAttendeeWrapper: curEventWrapper.Attendees){
 
                         System.assertEquals('Test Test', curAttendeeWrapper.Name, 'Attendee Name does not match');

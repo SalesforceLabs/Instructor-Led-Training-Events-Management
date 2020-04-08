@@ -125,6 +125,9 @@ public with sharing class EventAttendeeCtrl {
         //remove duplicates
         userIdsList = new List<Id>(new Set<Id>(userIdsList));
 
+        system.debug('EventAttendeeCtrl - getTrainingEventAttendeeUsersMap(): userIdsList');
+        system.debug(userIdsList);
+
         // Try to execute to query and catch any errors
         try {
             
