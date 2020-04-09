@@ -1,0 +1,37 @@
+<template>
+    <div class="slds-grid">
+        <div class="slds-col slds-size_1-of-7 slds-align_absolute-center">
+            <div class="slds-grid slds-p-horizontal_small">
+                <div class="slds-col slds-m-right_x-small">
+                    <lightning-icon icon-name="action:close" alternative-text="Close" class="clickable-icon"
+                        size="xx-small" onclick={handleCloseDateSelection}>
+                    </lightning-icon>
+                </div>
+
+                <div class="slds-col slds-m-left_x-small">
+                    <lightning-icon icon-name="standard:today" alternative-text="Today" class="clickable-icon"
+                        size="medium" onclick={handleTodayClicked}>
+                    </lightning-icon>
+                </div>
+            </div>
+
+        </div>
+        <div class="slds-col slds-size_3-of-7">
+            <div class="slds-p-horizontal_small slds-text-align_left">
+                <lightning-combobox name="selectedMonth" label="Select Month" value={selectedMonth}
+                    options={monthsPicklistOptions} onchange={handleMonthSelectionChange}>
+                </lightning-combobox>
+            </div>
+
+        </div>
+
+        <div class="slds-col slds-size_3-of-7">
+            <div class="slds-p-horizontal_small slds-text-align_left">
+                <lightning-combobox name="selectedYear" label="Selected Year" value={selectedYear}
+                    options={yearsPicklistOptions} onchange={handleYearSelectionChange}>
+                </lightning-combobox>
+            </div>
+
+        </div>
+    </div>
+</template>

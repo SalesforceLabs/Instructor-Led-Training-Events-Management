@@ -23,40 +23,22 @@
             </header>
         </section>
 
-        <section slot="footer">
+        <section class="border-bottom">
 
             <template if:true={showDateSelection}>
-                <section class="slds-m-bottom_large slds-m-horizontal_medium border-bottom">
-                    <div class="slds-grid">
-                        <div class="slds-col slds-align_absolute-center">
-                            <div class="slds-p-horizontal_small">
-                                <lightning-icon icon-name="action:close" alternative-text="Close" class="clickable-icon" size="xx-small" onclick={handleCloseDateSelection}>
-                                </lightning-icon>
-                            </div>
 
-                        </div>
-                        <div class="slds-col slds-align_absolute-center">
-                            <div class="slds-p-horizontal_small slds-text-align_left">
-                                <lightning-combobox name="selectedMonth" label="Select Month" value={currentMonth}
-                                    options={monthsPicklistOptions} onchange={handleMonthSelectionChange}>
-                                </lightning-combobox>
-                            </div>
-
-                        </div>
-                        <div class="slds-col slds-align_absolute-center">
-                            <div class="slds-p-horizontal_small slds-text-align_left">
-                                <lightning-combobox name="selectedYear" label="Selected Year" value={currentYear}
-                                    options={yearsPicklistOptions} onchange={handleYearSelectionChange}>
-                                </lightning-combobox>
-                            </div>
-
-                        </div>
-                    </div>
+                <section class="slds-m-bottom_large slds-p-horizontal_medium">
+                    <c-date-filter-conatiner selected-month={monthVarString} selected-year={yearVarString}
+                        onclosefilter={handleCloseDateSelection} onmonthchanged={handleMonthSelectionChange}
+                        onyearchanged={handleYearSelectionChange} ontodayclicked={handleTodayClicked}>
+                    </c-date-filter-conatiner>
                 </section>
 
             </template>
 
+        </section>
 
+        <section slot="footer">
             <div class="calendar-border">
                 <section class="rows-container slds-grid slds-grid_vertical">
 
@@ -82,18 +64,18 @@
 
                             <div class="row-container">
                                 <template for:each={row.rowData} for:item="col">
-    
+
                                     <div class="slds-p-around_xx-small row-item" key={col.cellId}>
                                         <c-calendar-cell-container oneventdateclicked={handleEventDateClicked}
                                             onopenselectmodal={handleOpenEventSelectModal} current-cell-data={col}>
                                         </c-calendar-cell-container>
                                     </div>
-    
+
                                 </template>
-    
+
                             </div>
                         </section>
-                        
+
                     </template>
 
                 </section>
@@ -110,8 +92,7 @@
 
     <template if:true={showEventCreateModal}>
         <c-event-creation-modal oncancel={handleCloseEventCreateModal} onclose={handleCloseEventCreateModal}
-            object-data={objectData} hide-footer="true" 
-            is-admin-view={isAdminView} is-attendee-view={isAttendeeView}>
+            object-data={objectData} hide-footer="true" is-admin-view={isAdminView} is-attendee-view={isAttendeeView}>
         </c-event-creation-modal>
     </template>
 </template>

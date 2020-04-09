@@ -46,3 +46,7 @@
     cursor: pointer;
     transform: translateY(0.75rem);
 }
+
+.border-bottom{
+    border-bottom: 1px solid rgba(0,0,0,.06);
+}

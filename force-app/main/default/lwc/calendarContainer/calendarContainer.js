@@ -13,7 +13,7 @@ export default class CalendarContainer extends LightningElement {
     //**********************************************************************************************
     // Constant values
     daysOfWeekList = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; // months array that holds names of the months (can be changed)
-    monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; // moths array that holds names of the months (can be changed)
+    monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; // months array that holds names of the months (can be changed)
 
     //**********************************************************************************************
     // Display + Org Data
@@ -42,9 +42,9 @@ export default class CalendarContainer extends LightningElement {
 
     //**********************************************************************************************
     // Date Variables
-    @track todaysDate = new Date();                     // the current date
-    @track currentMonth = this.todaysDate.getMonth();   // the month we are currently displaying data for
-    @track currentYear = this.todaysDate.getFullYear(); // the year we are currently displaying data for
+    @track todaysDate = new Date();                      // the current date
+    @track currentMonth = this.todaysDate.getMonth();    // selected month
+    @track currentYear = this.todaysDate.getFullYear();  // selected year
 
     //**********************************************************************************************
     // Design attributes
@@ -56,27 +56,8 @@ export default class CalendarContainer extends LightningElement {
     //**********************************************************************************************
     // Getters
     get currentMonthLabel() { return this.monthsList[this.currentMonth]; } // used to display the month label to the user
-
-    get monthsPicklistOptions() {
-        let optionsList = [];
-
-        this.monthsList.forEach( (item, i)=> {
-            optionsList.push({ label: item, value: i });
-        });
-
-        return optionsList;
-    }
-
-    get yearsPicklistOptions() {
-        let optionsList = [];
-        let startingYear = (this.todaysDate.getFullYear()) - 1;
-
-        for(let i = 0; i < 3; i++){
-            optionsList.push({ label: startingYear + i, value: startingYear + i });
-        }
-
-        return optionsList;
-    }
+    get monthVarString() { return this.currentMonth.toString(10); }
+    get yearVarString() { return this.currentYear.toString(10); }
 
     //**********************************************************************************************
     // Wire Variables
@@ -134,6 +115,9 @@ export default class CalendarContainer extends LightningElement {
         this.openEventSelectModalHelper();
     }
 
+    handleTodayClicked(){
+        this.setCurrentDateToToday();
+    }
     
     handleCloseEventSelectModal() {
         this.closeEventSelectModalHelper();
@@ -157,11 +141,11 @@ export default class CalendarContainer extends LightningElement {
     }
 
     handleMonthSelectionChange(event) {
-        this.currentMonth = event.detail.value;
+        this.currentMonth = event.detail;
     }
 
     handleYearSelectionChange(event){
-        this.currentYear = event.detail.value;
+        this.currentYear = event.detail;
     }
 
     handleForceRefreshData(){
@@ -185,8 +169,8 @@ export default class CalendarContainer extends LightningElement {
     }
 
     setCurrentDateToToday() {
-        this.currentYear = this.todaysDate.getFullYear();
         this.currentMonth = this.todaysDate.getMonth();
+        this.currentYear = this.todaysDate.getFullYear(); 
     }
 
     setCurrentDateToNextMonth() {
