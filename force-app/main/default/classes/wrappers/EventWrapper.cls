@@ -27,6 +27,12 @@ public with sharing class EventWrapper {
     public Decimal NumAttendees { get; set; }
 
     @AuraEnabled
+    public String EventType { get; set; }
+
+    @AuraEnabled
+    public String InstructorName { get; set; }
+
+    @AuraEnabled
     public List<AttendeesWrapper> Attendees { get; set; }
 
     @AuraEnabled

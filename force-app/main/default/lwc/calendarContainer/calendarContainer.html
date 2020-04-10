@@ -1,25 +1,10 @@
 <template>
     <lightning-card>
         <section slot="title">
-            <header class="slds-m-vertical_medium slds-align_absolute-center">
-                <span class="item-block">
-                    <lightning-button-icon icon-name="utility:chevronleft" alternative-text="Prev"
-                        onclick={previousMonthClicked}></lightning-button-icon>
-                </span>
-
-                <span class="item-block slds-m-horizontal_medium">
-
-                    <div class="date-text-block" onclick={handleDateTextSelected}>
-                        <p class="slds-text-heading_large text-bold">
-                            {currentMonthLabel} {currentYear}
-                        </p>
-                    </div>
-                </span>
-
-                <span class="item-block">
-                    <lightning-button-icon icon-name="utility:chevronright" alternative-text="Next"
-                        onclick={nextMonthClicked}></lightning-button-icon>
-                </span>
+            <header class="slds-m-vertical_medium">
+                <c-date-display-block current-month={currentMonth} current-year={currentYear}
+                    ondateselected={handleDisplayDateClicked} onmonthchanged={handleMonthSelectionChange}
+                    onyearchanged={handleYearSelectionChange}></c-date-display-block>
             </header>
         </section>
 

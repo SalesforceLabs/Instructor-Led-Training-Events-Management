@@ -1,0 +1,44 @@
+<template>
+    <lightning-card>
+
+        <section slot="title">
+            <header class="slds-m-vertical_medium">
+                <c-date-display-block current-month={currentMonth} current-year={currentYear}
+                    ondateselected={handleDisplayDateClicked} onmonthchanged={handleMonthSelectionChange}
+                    onyearchanged={handleYearSelectionChange}></c-date-display-block>
+            </header>
+        </section>
+
+        <section class="border-bottom">
+
+            <template if:true={showDateSelection}>
+
+                <section class="slds-m-bottom_large slds-p-horizontal_medium">
+                    <c-date-filter-conatiner selected-month={monthVarString} selected-year={yearVarString}
+                        onclosefilter={handleCloseDateSelection} onmonthchanged={handleMonthSelectionChange}
+                        onyearchanged={handleYearSelectionChange} ontodayclicked={handleTodayClicked}>
+                    </c-date-filter-conatiner>
+                </section>
+
+            </template>
+
+        </section>
+
+        <section slot="footer">
+
+        </section>
+    </lightning-card>
+
+    <template if:true={showEventSelectModal}>
+        <c-event-selection-modal oncancel={handleCloseEventSelectModal} onclose={handleCloseEventSelectModal}
+            object-data={objectData} modal-selection-type={modalSelectionType} modal-data={modalData}
+            is-admin-view={isAdminView} is-attendee-view={isAttendeeView}>
+        </c-event-selection-modal>
+    </template>
+
+    <template if:true={showEventCreateModal}>
+        <c-event-creation-modal oncancel={handleCloseEventCreateModal} onclose={handleCloseEventCreateModal}
+            object-data={objectData} hide-footer="true" is-admin-view={isAdminView} is-attendee-view={isAttendeeView}>
+        </c-event-creation-modal>
+    </template>
+</template>

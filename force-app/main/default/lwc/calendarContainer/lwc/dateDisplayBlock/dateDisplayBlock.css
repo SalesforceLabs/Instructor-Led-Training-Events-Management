@@ -1,0 +1,11 @@
+.item-block{
+    display: inline-block;
+}
+
+.date-text-block:hover{
+    cursor: pointer;
+}
+
+.text-bold{
+    font-weight: bold;
+}

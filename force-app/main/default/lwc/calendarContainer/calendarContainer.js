@@ -12,8 +12,7 @@ export default class CalendarContainer extends LightningElement {
 
     //**********************************************************************************************
     // Constant values
-    daysOfWeekList = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; // months array that holds names of the months (can be changed)
-    monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]; // months array that holds names of the months (can be changed)
+    daysOfWeekList = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];                                      // months array that holds names of the days (can be changed)
 
     //**********************************************************************************************
     // Display + Org Data
@@ -30,8 +29,6 @@ export default class CalendarContainer extends LightningElement {
         }
     }; 
 
-    @track showDateSelection = false;   // allow users to input date options 
-
     //**********************************************************************************************
     // Modal Variables
     @track showEventSelectModal = false;    // used to determine whther or not to show the event select modal
@@ -46,6 +43,8 @@ export default class CalendarContainer extends LightningElement {
     @track currentMonth = this.todaysDate.getMonth();    // selected month
     @track currentYear = this.todaysDate.getFullYear();  // selected year
 
+    @track showDateSelection = false;   // allow users to input date options 
+
     //**********************************************************************************************
     // Design attributes
     @api showOnlyMyRecords = false;
@@ -55,7 +54,6 @@ export default class CalendarContainer extends LightningElement {
 
     //**********************************************************************************************
     // Getters
-    get currentMonthLabel() { return this.monthsList[this.currentMonth]; } // used to display the month label to the user
     get monthVarString() { return this.currentMonth.toString(10); }
     get yearVarString() { return this.currentYear.toString(10); }
 
@@ -97,70 +95,61 @@ export default class CalendarContainer extends LightningElement {
     // Onclick / Event Handlers
     //----------------------------------------------------------------------------------------------------
 
-    previousMonthClicked(){
-        this.setCurrentDateToPreviousMonth();
+    //**********************************************************************************************
+    // Date Handlers
+    handleTodayClicked(){ // When the reset to today button is clicked in a child cmp
+        this.setCurrentDateToToday();
     }
 
-    nextMonthClicked(){
-        this.setCurrentDateToNextMonth();
+    handleDisplayDateClicked(){ // When the user clicks the date from a child cmp
+        this.showDateSelection = !this.showDateSelection;
     }
 
-    handleEventDateClicked() {
-        this.showEventCreateModal = true;
+    handleCloseDateSelection(){ // When the cancel button is clicked from the child date filter cmp
+        this.showDateSelection = false;
     }
-    
-    handleOpenEventSelectModal(event) {
+
+    handleMonthSelectionChange(event) { // When a child cmp changes the date
+        this.currentMonth = event.detail;
+    }
+
+    handleYearSelectionChange(event){ // When a child cmp changes the year
+        this.currentYear = event.detail;
+    }
+
+    //**********************************************************************************************
+    // Modal Handlers
+    handleOpenEventSelectModal(event) { // When an event is selected
         this.modalSelectionType = event.detail.type;
         this.modalData = event.detail.modalData;
         this.openEventSelectModalHelper();
     }
 
-    handleTodayClicked(){
-        this.setCurrentDateToToday();
-    }
-    
-    handleCloseEventSelectModal() {
+    handleCloseEventSelectModal() { // When the event selection modal close is called by a child
         this.closeEventSelectModalHelper();
     }
 
-    handleOpenEventCreateModal() {
+    handleEventDateClicked() { // When the user clicks on a date on the calendar
         this.openEventCreateModalHelper();
     }
 
-    
-    handleCloseEventCreateModal() {
+    handleCloseEventCreateModal() {  // When the event creation modal close is called by a child
         this.closeEventCreateModalHelper();
     }
 
-    handleDateTextSelected() {
-        this.showDateSelection = true;
-    }
-
-    handleCloseDateSelection(){
-        this.showDateSelection = false;
-    }
-
-    handleMonthSelectionChange(event) {
-        this.currentMonth = event.detail;
-    }
-
-    handleYearSelectionChange(event){
-        this.currentYear = event.detail;
-    }
-
-    handleForceRefreshData(){
+    handleForceRefreshData(){ // When a child wants data updated
         this.refreshDataHelper();
     }
 
-    handleRecordChanged(event){
+    handleRecordChanged(event){ // When a childs record changes
         this.changedRecordId = event.detail;
     }
     
     //----------------------------------------------------------------------------------------------------
     // Helpers
     //----------------------------------------------------------------------------------------------------
-    // Used to avoid passing params from the wire and also so that we can all from the connected callback
-    renderCalHelper() {
+
+    renderCalHelper() { // Used to avoid passing params from the wire and also so that we can all from the connected callback
         this.renderCalendar(this.currentMonth, this.currentYear); 
     }
 
@@ -171,16 +160,6 @@ export default class CalendarContainer extends LightningElement {
     setCurrentDateToToday() {
         this.currentMonth = this.todaysDate.getMonth();
         this.currentYear = this.todaysDate.getFullYear(); 
-    }
-
-    setCurrentDateToNextMonth() {
-        this.currentYear = (this.currentMonth === 11) ? this.currentYear + 1 : this.currentYear;
-        this.currentMonth = (this.currentMonth + 1) % 12;
-    }
-
-    setCurrentDateToPreviousMonth() {
-        this.currentYear = (this.currentMonth === 0) ? this.currentYear - 1 : this.currentYear;
-        this.currentMonth = (this.currentMonth === 0) ? 11 : this.currentMonth - 1;
     }
 
     openEventSelectModalHelper() {

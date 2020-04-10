@@ -19,10 +19,6 @@ public with sharing class CalendarCtrl {
         Integer currentMonth,
         Integer currentYear,
         String changedRecordId){
-            /*
-            if(changedRecordId != null){
-                System.debug('Fired due to record changing: ' + changedRecordId);
-            }*/
 
             // increment month as it is one number lower in javascript
             currentMonth ++;

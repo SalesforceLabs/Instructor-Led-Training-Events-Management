@@ -22,29 +22,12 @@
     border: 1px solid rgba(0,0,0,.06);
 }
 
-.item-block{
-    display: inline-block;
-}
-
 .text-bold{
     font-weight: bold;
 }
 
 .text-hover{
     cursor: pointer;
-}
-
-.datepicker-container{
-    z-index: 99;
-}
-
-.date-text-block:hover{
-    cursor: pointer;
-}
-
-.clickable-icon{
-    cursor: pointer;
-    transform: translateY(0.75rem);
 }
 
 .border-bottom{
