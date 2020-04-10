@@ -88,27 +88,28 @@ public with sharing class EventOccuranceCtrl {
 
         try {
             if(showUserRecordsOnly == true){
-
                 Id userId = UserInfo.getUserId();
 
                 resultList = [
                     SELECT
-                        Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c, Number_Sign_Ups__c, Number_Attendees__c, Event_Full__c,
+                        Id, RecordTypeId, Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c, Instructor__r.Name, Number_Sign_Ups__c, Number_Attendees__c, Event_Full__c,
                               ( SELECT Id, Attendance_Confirmed__c, Sign_Up_Confirmed__c, Related_User__c FROM Training_Event_Attendees__r)
                     FROM Training_Event_Occurrence__c
                     WHERE CALENDAR_MONTH(Start_Date_Time__c) =: currentMonth AND CALENDAR_YEAR(Start_Date_Time__c) =: currentYear AND Training_Event_Occurrence__c.Instructor__c = :userId 
                     WITH SECURITY_ENFORCED
+                    ORDER BY Start_Date_Time__c ASC NULLS LAST
                 ];
 
             } else {
 
                 resultList = [
                     SELECT
-                        Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c, Number_Sign_Ups__c, Number_Attendees__c, Event_Full__c,
+                        Id, RecordTypeId, Training_Event_Name__c, Start_Date_Time__c, End_Date_Time__c, Instructor__c, Instructor__r.Name, Number_Sign_Ups__c, Number_Attendees__c, Event_Full__c,
                               ( SELECT Id, Attendance_Confirmed__c, Sign_Up_Confirmed__c, Related_User__c FROM Training_Event_Attendees__r)
                     FROM Training_Event_Occurrence__c
                     WHERE CALENDAR_MONTH(Start_Date_Time__c) =: currentMonth AND CALENDAR_YEAR(Start_Date_Time__c) =: currentYear
                     WITH SECURITY_ENFORCED
+                    ORDER BY Start_Date_Time__c ASC NULLS LAST
                 ];
 
             }

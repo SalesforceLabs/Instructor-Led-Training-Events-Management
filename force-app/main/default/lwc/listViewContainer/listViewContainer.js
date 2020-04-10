@@ -1,10 +1,32 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
+import getListViewData from '@salesforce/apex/ListViewCtrl.getListViewData';
+import { refreshApex } from '@salesforce/apex';
+
+import TRAINING_EVENT_OCCURANCE from '@salesforce/schema/Training_Event_Occurrence__c';
 
 export default class ListViewContainer extends LightningElement {
 
     //----------------------------------------------------------------------------------------------------
     // Variables
     //----------------------------------------------------------------------------------------------------
+
+    //**********************************************************************************************
+    // Display + Org Data
+    @track allEvents;
+    @track myEvents;
+
+    @track showAllEvents = true;
+    @track showMyEvents = false;
+
+    wiredReference;
+
+    objectData = {
+        apiName: TRAINING_EVENT_OCCURANCE.objectApiName,
+        schemaData : TRAINING_EVENT_OCCURANCE,
+        fields: {
+            
+        }
+    }; 
 
     //**********************************************************************************************
     // Date Variables
@@ -18,7 +40,7 @@ export default class ListViewContainer extends LightningElement {
     // Modal Variables
     @track showEventSelectModal = false;    // used to determine whther or not to show the event select modal
     @track showEventCreateModal = false;    // used to determine whther or not to show the event create modal
-    @track modalSelectionType = 'event';   // used to determine what type of modal to show (either a single event or events)
+    @track modalSelectionType = 'event';    // used to determine what type of modal to show (either a single event or events)
     @track modalData;                       // the data to be passed to the modal
     @track changedRecordId = '';            // will be updated when a child cmp changed a record
 
@@ -32,6 +54,38 @@ export default class ListViewContainer extends LightningElement {
     // Getters
     get monthVarString() { return this.currentMonth.toString(10); }
     get yearVarString() { return this.currentYear.toString(10); }
+
+    get showMyEventsList() {
+        if(this.myEvents !== undefined){ return this.myEvents.length > 0; }
+        else { return false; }
+    }
+
+    get showAllEventsList() {
+        if(this.allEvents !== undefined){ return this.allEvents.length > 0; }
+        else { return false; }
+    }
+
+    //**********************************************************************************************
+    // Wire Variables
+
+    @wire(getListViewData, { 
+        currentMonth: '$currentMonth',
+        currentYear: '$currentYear',
+        isAdminView: '$isAdminView',
+        isAttendeeView: '$isAttendeeView',
+    })
+    wiredData(value) {
+        this.wiredReference = value;
+        const { data, error } = value;
+
+        if(data){
+            this.allEvents = data.allEvents;
+            this.myEvents = data.myEvents;
+        } else if(error) {
+            console.log(error);
+        }
+    }
+
 
     //----------------------------------------------------------------------------------------------------
     // Onclick / Event Handlers
@@ -60,10 +114,21 @@ export default class ListViewContainer extends LightningElement {
     }
 
     //**********************************************************************************************
+    // Button Handlers
+    handleShowAllEventsClicked(){
+        this.showMyEvents = false;
+        this.showAllEvents = true;
+    }
+
+    handleShowMyEventsClicked(){
+        this.showMyEvents = true;
+        this.showAllEvents = false;
+    }
+
+    //**********************************************************************************************
     // Modal Handlers
-    handleOpenEventSelectModal(event) { // When an event is selected
-        this.modalSelectionType = event.detail.type;
-        this.modalData = event.detail.modalData;
+    handleShowMoreClicked(event) { // When an event is selected
+        this.modalData = event.detail;
         this.openEventSelectModalHelper();
     }
 
@@ -71,7 +136,7 @@ export default class ListViewContainer extends LightningElement {
         this.closeEventSelectModalHelper();
     }
 
-    handleEventDateClicked() { // When the user clicks on a date on the calendar
+    handleCreateNewEventClicked() { // When the user clicks on a date on the calendar
         this.openEventCreateModalHelper();
     }
 

@@ -102,6 +102,8 @@ public with sharing class CalendarCtrl {
                         tempEventWrapper.NumSignUps = resultItem.Number_Sign_Ups__c;
                         tempEventWrapper.NumAttendees = resultItem.Number_Attendees__c;
                         tempEventWrapper.EventFull = true;
+                        tempEventWrapper.EventType = Schema.SObjectType.Training_Event_Occurrence__c.getRecordTypeInfosById().get(resultItem.RecordTypeId).getName();
+                        tempEventWrapper.InstructorName = resultItem.Instructor__r.Name;
                         tempEventWrapper.CurrentUserRegistered = false;
                         tempEventWrapper.CurrentUserAttendee = null;
 

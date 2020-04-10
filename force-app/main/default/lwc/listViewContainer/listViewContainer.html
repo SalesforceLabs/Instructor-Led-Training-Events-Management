@@ -25,8 +25,69 @@
         </section>
 
         <section slot="footer">
+            <div class="slds-grid slds-grid_vertical">
 
+                <div class="slds-col slds-align--absolute-center slds-p-bottom_small border-bottom full-width">
+
+                    <span class="item-block slds-m-right_xx-small">
+                        <button class="slds-button slds-button_neutral" onclick={handleShowAllEventsClicked}>
+                            Show All Events</button>
+                    </span>
+
+                    <span class="item-block slds-mleft_xx-small">
+                        <button class="slds-button slds-button_neutral" onclick={handleShowMyEventsClicked}>
+                            Show My Events</button>
+                    </span>
+
+                    <template if:true={isAdminView}>
+                        <span class="item-block slds-mleft_xx-small">
+                            <button class="slds-button slds-button_neutral" onclick={handleCreateNewEventClicked}>
+                                Create New Events</button>
+                        </span>
+                    </template>
+
+                </div>
+
+
+                <template if:true={showAllEvents}>
+                    <template if:true={showMyEventsList}>
+                        <template for:each={allEvents} for:item="event">
+                            <div key={event.Id} class="slds-col slds-align--absolute-center slds-p-vertical_small">
+                                <c-list-view-item current-event={event} onshowmoreclicked={handleShowMoreClicked}></c-list-view-item>
+                            </div>
+                        </template>
+                    </template>
+
+                    <template if:false={showMyEventsList}>
+                        <div class="slds-col slds-align--absolute-center slds-p-vertical_small">
+                            <div class="slds-text-heading_small">
+                                Looks like we couldn't find any events!
+                            </div>
+                        </div>
+                    </template>
+                </template>
+
+                <template if:true={showMyEvents}>
+                    <template if:true={showMyEventsList}>
+                        <template for:each={myEvents} for:item="event">
+                            <div key={event.Id} class="slds-col slds-align--absolute-center slds-p-vertical_small">
+                                <c-list-view-item current-event={event} onshowmoreclicked={handleShowMoreClicked}></c-list-view-item>
+                            </div>
+                        </template>
+                    </template>
+
+                    <template if:false={showMyEventsList}>
+                        <div class="slds-col slds-align--absolute-center slds-p-vertical_small">
+                            <div class="slds-text-heading_small">
+                                Looks like we couldn't find any events!
+                            </div>
+                        </div>
+                    </template>
+                </template>
+
+            </div>
         </section>
+
     </lightning-card>
 
     <template if:true={showEventSelectModal}>

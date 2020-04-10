@@ -1,0 +1,9 @@
+<template>
+    <lightning-card  title={currentEvent.Name} icon-name="standard:event">
+        <button class="slds-button slds-button_neutral" onclick={handleShowMoreClicked} slot="actions">
+            See More</button>
+        <section slot="footer">
+            Start Time: {currentEvent.StartTimeString} - End Time: {currentEvent.StartTime} - Instructor: {currentEvent.InstructorName} - Type: {currentEvent.EventType}
+        </section>
+    </lightning-card>
+</template>
