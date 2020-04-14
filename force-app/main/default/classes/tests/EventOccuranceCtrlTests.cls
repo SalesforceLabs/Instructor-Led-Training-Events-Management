@@ -123,4 +123,24 @@ public class EventOccuranceCtrlTests {
 
         System.assertEquals(0, testEventOccuranceList.size(), 'Number of occurances does not match');
     }
+
+
+
+    @isTest
+    static void getAttendeeEventOccurancesTest(){
+        List<Training_Event_Occurrence__c> testEventOccuranceList = EventOccuranceCtrl.getTrainingEventOccurancesWithDate(1, 2010, false);
+        User ownerUser = [SELECT Id FROM User WHERE Username = 'tester@apextesteruser.test'];
+
+        System.assertEquals(1, EventOccuranceCtrl.getAttendeeEventOccurances(testEventOccuranceList, ownerUser.Id).size() , 'Number of occurances does not match');
+    }
+
+
+
+    @isTest
+    static void getAttendeeEventOccurancesNegativeTest(){
+        List<Training_Event_Occurrence__c> testEventOccuranceList = EventOccuranceCtrl.getTrainingEventOccurancesWithDate(1, 2010, false);
+        User ownerUser = [SELECT Id FROM User WHERE Username != 'tester@apextesteruser.test' LIMIT 1];
+
+        System.assertEquals(0, EventOccuranceCtrl.getAttendeeEventOccurances(testEventOccuranceList, ownerUser.Id).size() , 'Number of occurances does not match');
+    }
 }
