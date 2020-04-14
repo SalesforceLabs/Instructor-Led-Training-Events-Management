@@ -1,5 +1,6 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import getListViewData from '@salesforce/apex/ListViewCtrl.getListViewData';
+import { refreshApex } from '@salesforce/apex';
 
 import TRAINING_EVENT_OCCURANCE from '@salesforce/schema/Training_Event_Occurrence__c';
 
@@ -159,6 +160,10 @@ export default class ListViewContainer extends LightningElement {
         this.closeEventCreateModalHelper();
     }
 
+    handleRecordChanged() { // When a childs record changes
+        this.refreshDataHelper();
+    }
+
     //----------------------------------------------------------------------------------------------------
     // Helpers
     //----------------------------------------------------------------------------------------------------
@@ -181,7 +186,11 @@ export default class ListViewContainer extends LightningElement {
     }
 
     closeEventCreateModalHelper() {
-        //this.refreshDataHelper();
+        this.refreshDataHelper();
         this.showEventCreateModal = false;
+    }
+
+    refreshDataHelper(){
+        return refreshApex(this.wiredReference);
     }
 }

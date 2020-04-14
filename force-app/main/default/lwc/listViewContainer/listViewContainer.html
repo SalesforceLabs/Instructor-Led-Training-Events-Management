@@ -67,7 +67,7 @@
                 <div class="slds-col border-bottom full-width"></div>
 
                 <template if:true={showAllEvents}>
-                    <template if:true={showMyEventsList}>
+                    <template if:true={showAllEventsList}>
 
                         <div class="slds-grid slds-wrap slds-gutters">
                             <template for:each={allEvents} for:item="event">
@@ -81,7 +81,7 @@
 
                     </template>
 
-                    <template if:false={showMyEventsList}>
+                    <template if:false={showAllEventsList}>
                         <div class="slds-col slds-align--absolute-center slds-p-vertical_large">
                             <div class="slds-text-heading_small">
                                 Looks like we couldn't find any events!
@@ -122,7 +122,7 @@
     <template if:true={showEventSelectModal}>
         <c-event-selection-modal oncancel={handleCloseEventSelectModal} onclose={handleCloseEventSelectModal}
             object-data={objectData} modal-selection-type={modalSelectionType} modal-data={modalData}
-            is-admin-view={isAdminView} is-attendee-view={isAttendeeView}>
+            is-admin-view={isAdminView} is-attendee-view={isAttendeeView} onrecordchanged={handleRecordChanged}>
         </c-event-selection-modal>
     </template>
 

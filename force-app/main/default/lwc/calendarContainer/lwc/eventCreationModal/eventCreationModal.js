@@ -64,6 +64,14 @@ export default class EventCreationModal extends LightningElement {
     }
 
     handleEventOccuranceCreation(event){
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Success',
+                message: 'You have sucessfully created a new event occurance!',
+                variant: 'success',
+            }),
+        );
+
         this.closeModalHelper();
     }
 

@@ -10,6 +10,14 @@ export default class EventCreationSection extends LightningElement {
 
     handleEventCreation(){
         this.createNewEventSelected = false;
+
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Success',
+                message: 'You have sucessfully created a new event!',
+                variant: 'success',
+            }),
+        );
     }
 
     handleEventFormCancelled(){
