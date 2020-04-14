@@ -6,6 +6,18 @@ public with sharing class EventWrapper {
     public String Name { get; set; }
 
     @AuraEnabled
+    public Date StartDate { get; set; }
+
+    @AuraEnabled
+    public String StartDateString { get; set; }
+
+    @AuraEnabled
+    public Date EndDate { get; set; }
+
+    @AuraEnabled
+    public String EndDateString { get; set; }
+
+    @AuraEnabled
     public Time StartTime { get; set; }
 
     @AuraEnabled

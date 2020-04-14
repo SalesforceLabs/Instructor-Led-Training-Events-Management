@@ -148,6 +148,10 @@ public with sharing class ListViewCtrl {
                     // Add variables to the even object
                     tempEventWrapper.Id = (String) resultItem.Id;
                     tempEventWrapper.Name = (String) resultItem.Training_Event_Name__c;
+                    tempEventWrapper.StartDate = currentRecordStartDate;
+                    tempEventWrapper.StartDateString = currentRecordStartDate.format();
+                    tempEventWrapper.EndDate = currentRecordEndDate;
+                    tempEventWrapper.EndDateString = currentRecordStartDate.format();
                     tempEventWrapper.StartTime = currentRecordStartTime;
                     tempEventWrapper.StartTimeString = convertTimeToString(currentRecordStartTime);
                     tempEventWrapper.EndTime = currentRecordEndTime;

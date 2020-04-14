@@ -9,3 +9,23 @@
 .full-width{
     width: 100%;
 }
+
+.item{
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.item:hover{
+    background-color: rgba(26,115,232,0.1);
+}
+
+.item-not-selected{
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
+}
+
+.item-selected{
+    border-left: 2px solid #1a73e8;
+    border-right: 2px solid #1a73e8;
+    font-weight: bold;
+}

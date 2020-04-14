@@ -1,6 +1,5 @@
 import { LightningElement, track, api, wire } from 'lwc';
 import getListViewData from '@salesforce/apex/ListViewCtrl.getListViewData';
-import { refreshApex } from '@salesforce/apex';
 
 import TRAINING_EVENT_OCCURANCE from '@salesforce/schema/Training_Event_Occurrence__c';
 
@@ -54,6 +53,22 @@ export default class ListViewContainer extends LightningElement {
     // Getters
     get monthVarString() { return this.currentMonth.toString(10); }
     get yearVarString() { return this.currentYear.toString(10); }
+
+    get allEventsClass(){ 
+        if( this.showAllEvents === true ){
+            return 'item item-selected';
+        } else {
+            return 'item item-not-selected';
+        }
+    }
+
+    get myEventsClass(){ 
+        if( this.showMyEvents === true ){
+            return 'item item-selected';
+        } else {
+            return 'item item-not-selected';
+        }
+    }
 
     get showMyEventsList() {
         if(this.myEvents !== undefined){ return this.myEvents.length > 0; }
