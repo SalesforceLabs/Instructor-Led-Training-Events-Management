@@ -38,9 +38,20 @@
                     </span>
 
                     <span class="item-block slds-m-left_x-small slds-m-right_x-small">
-                        <lightning-icon icon-name="utility:event" alternative-text="" size="medium"
-                            title="medium event">
-                        </lightning-icon>
+
+
+                        <template if:true={isAdminView}>
+                            <lightning-icon icon-name="action:log_event" class="clickable"
+                                onclick={handleCreateNewEventClicked} alternative-text="" size="medium"
+                                title="medium event">
+                            </lightning-icon>
+                        </template>
+
+                        <template if:true={isAttendeeView}>
+                            <lightning-icon icon-name="action:new_event" alternative-text="" size="medium"
+                                title="medium event">
+                            </lightning-icon>
+                        </template>
                     </span>
 
                     <span class="item-block slds-m-left_x-small">
@@ -52,20 +63,6 @@
                     </span>
                 </div>
 
-                <template if:true={isAdminView}>
-                    <div class="slds-col slds-align--absolute-center slds-p-bottom_small">
-                        <button class="slds-button slds-button_neutral" onclick={handleCreateNewEventClicked}>
-                            <div class="slds-align--absolute-center">
-                                <span class="slds-p-right_xx-small">
-                                    <lightning-icon icon-name="utility:new" alternative-text="" size="xx-small">
-                                    </lightning-icon>
-                                </span>
-                                <span class="slds-p-left_xx-small text-bold">Create New Event</span>
-                            </div>
-                        </button>
-                    </div>
-                </template>
-
 
                 <div class="slds-col border-bottom full-width"></div>
 
@@ -74,7 +71,8 @@
 
                         <div class="slds-grid slds-wrap slds-gutters">
                             <template for:each={allEvents} for:item="event">
-                                <div key={event.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-vertical_small">
+                                <div key={event.Id}
+                                    class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-vertical_small">
                                     <c-list-view-item current-event={event} onshowmoreclicked={handleShowMoreClicked}>
                                     </c-list-view-item>
                                 </div>
@@ -97,7 +95,8 @@
 
                         <div class="slds-grid slds-wrap slds-gutters">
                             <template for:each={myEvents} for:item="event">
-                                <div key={event.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-vertical_small">
+                                <div key={event.Id}
+                                    class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-vertical_small">
                                     <c-list-view-item current-event={event} onshowmoreclicked={handleShowMoreClicked}>
                                     </c-list-view-item>
                                 </div>

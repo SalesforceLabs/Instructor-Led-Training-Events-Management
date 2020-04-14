@@ -88,8 +88,9 @@ public with sharing class ListViewCtrl {
     private static ListViewReturnWrapper getAttendeeRecords(Integer currentMonth, Integer currentYear){
         
         List<Training_Event_Occurrence__c> allEvents = EventOccuranceCtrl.getTrainingEventOccurancesWithDate(currentMonth, currentYear, false);
+        List<Training_Event_Occurrence__c> myEvents = EventOccuranceCtrl.getAttendeeEventOccurances(allEvents, UserInfo.getUserId());
 
-        return convertAttendeeEventOccuranceListToWrapper(allEvents);
+        return convertAttendeeEventOccuranceListToWrapper(allEvents, myEvents);
     }
 
     
@@ -103,8 +104,11 @@ public with sharing class ListViewCtrl {
 
         @returns: ListViewReturnWrapper - Contains one list for all events and one for my events
     */
-    private static ListViewReturnWrapper convertAttendeeEventOccuranceListToWrapper(List<Training_Event_Occurrence__c> events){
+    private static ListViewReturnWrapper convertAttendeeEventOccuranceListToWrapper(List<Training_Event_Occurrence__c> allEvents, List<Training_Event_Occurrence__c> myEvents){
         ListViewReturnWrapper returnWrapper = new ListViewReturnWrapper();
+
+        returnWrapper.allEvents = convertEventListToWrapper(allEvents);
+        returnWrapper.myEvents = convertEventListToWrapper(myEvents);
 
         system.debug('ListViewCtrl - convertAttendeeEventOccuranceListToWrapper(): returnWrapper');
         system.debug(returnWrapper);

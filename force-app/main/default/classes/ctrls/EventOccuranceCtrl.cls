@@ -123,4 +123,46 @@ public with sharing class EventOccuranceCtrl {
 
         return resultList;
     }
+
+
+
+    /*
+        @name: getAttendeeEventOccurances
+        @createdBy: Daniel Tilley
+        @description: Used to obtain a list of training event occurences which a user is attending
+        
+        @param: allEvents - list of all events for a given month
+        @param: currentUserId - the user Id whos attendance we want to check
+
+        @returns: List<Training_Event_Occurrence__c> - Returns the users 
+    */
+    public static List<Training_Event_Occurrence__c> getAttendeeEventOccurances(List<Training_Event_Occurrence__c> allEvents, Id currentUserId){
+       
+        List<Training_Event_Occurrence__c> returnList = new List<Training_Event_Occurrence__c>();
+
+        if(allEvents.size() > 0){
+            // Loop through the events
+            for(Training_Event_Occurrence__c currentEvent : allEvents){
+
+                // Check the event has attendees
+                if(currentEvent.Training_Event_Attendees__r.size() > 0){
+
+                    // Loop through event attendees and add contacts to the return wrapper
+                    for(Training_Event_Attendee__c eventAttendee: currentEvent.Training_Event_Attendees__r){
+
+                        // check the user is attending and add them to the list
+                        if(currentUserId == eventAttendee.Related_User__c){
+                            
+                            returnList.add(currentEvent);
+                        }
+                    }
+                } 
+            }
+        }
+        
+        system.debug('EventOccuranceCtrl - getAttendeeEventOccurances(): returnList');
+        system.debug(returnList);
+
+        return returnList;
+    }
 }
