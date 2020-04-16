@@ -5,6 +5,9 @@
     <masterLabel>Training Event - Attendee Confirmation</masterLabel>
     <description>Place this cmp on the page where your attendees will be sent from the sign up e-mails</description>
     <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__RecordPage</target>
         <target>lightningCommunity__Page</target>
         <target>lightningCommunity__Default</target>
     </targets>

@@ -152,4 +152,34 @@ public with sharing class EventAttendeeCtrl {
 
         return returnList;
     }
+
+
+
+    /*
+        @name: createNewEventAttendee
+        @createdBy: Daniel Tilley
+        @description: Used to create a new event attendee record
+        
+        @param: currentUserId - Id of the current user thats trying to signup
+        @param: relatedEventId - Id of the current user thats trying to signup
+        @param: currentDomainName - Id of the current user thats trying to signup
+
+        @returns: Boolean - To determine whether or not the record has been created or not
+    */
+    @AuraEnabled
+    public static Training_Event_Attendee__c createNewEventAttendee(Id currentUserId, Id relatedEventId, String currentDomainName){
+        try {
+            Training_Event_Attendee__c newAttendee = new Training_Event_Attendee__c();
+
+            newAttendee.Related_User__c = currentUserId;
+            newAttendee.Training_Event_Occurrence__c = relatedEventId;
+
+            insert newAttendee;
+
+            return newAttendee;
+        } catch(Exception e){
+            System.debug(e.getMessage());
+            return null;
+        }
+    }
 }

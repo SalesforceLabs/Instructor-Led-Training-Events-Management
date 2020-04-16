@@ -1,15 +1,11 @@
 import { LightningElement, api, track } from 'lwc';
-import { createRecord } from 'lightning/uiRecordApi';
 import { deleteRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import Id from '@salesforce/user/Id';
 
-import TRAINING_EVENT_ATTENDEE_OBJ from '@salesforce/schema/Training_Event_Attendee__c';
-import RELATED_USER from '@salesforce/schema/Training_Event_Attendee__c.Related_User__c';
-import RELATED_TRAINING_EVENT_OCC from '@salesforce/schema/Training_Event_Attendee__c.Training_Event_Occurrence__c';
-
 import confirmAttendeeEventAttendance from '@salesforce/apex/EventOccuranceCtrl.confirmAttendeeEventAttendance';
+import createNewEventAttendee from '@salesforce/apex/EventAttendeeCtrl.createNewEventAttendee';
 
 export default class AttendeeInfoView extends LightningElement {
 
@@ -82,32 +78,26 @@ export default class AttendeeInfoView extends LightningElement {
     //----------------------------------------------------------------------------------------------------
 
     handleUserSignUpClicked() {
-        const fields = {};
+        let pathName = window.location.pathname;
 
-        fields[RELATED_USER.fieldApiName] = Id;
-        fields[RELATED_TRAINING_EVENT_OCC.fieldApiName] = this.eventId;
-
-        const recordInput = { apiName: TRAINING_EVENT_ATTENDEE_OBJ.objectApiName, fields };
-
-        createRecord(recordInput)
+        createNewEventAttendee({ currentUserId : Id, relatedEventId : this.eventId, currentDomainName : pathName  })
             .then(trainingEventAttendee => {
-                this.newAttendeeId = trainingEventAttendee.id;
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Thanks for signing up! Please check your e-mail for confirmation.',
-                        variant: 'success',
-                    }),
-                );
+                if(trainingEventAttendee !== undefined){
+                    this.newAttendeeId = trainingEventAttendee.id;
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Success',
+                            message: 'Thanks for signing up! Please check your e-mail for confirmation.',
+                            variant: 'success',
+                        }),
+                    );
+                } else {
+                    this.showGenericErrorHelper();
+                }
             })
             .catch(error => {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: "Something Went Wrong",
-                        message: "Hmmmm, Looks like something went wrong, please try again!",
-                        variant: "error"
-                    }),
-                );
+                console.log(error);
+                this.showGenericErrorHelper();
             });
     }
 
@@ -130,13 +120,7 @@ export default class AttendeeInfoView extends LightningElement {
                 this.dispatchEvent(deletedEvent);
             })
             .catch(error => {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: "Something Went Wrong",
-                        message: "Hmmmm, Looks like something went wrong, please try again!",
-                        variant: "error"
-                    }),
-                );
+                this.showGenericErrorHelper();
 
                 window.console.log(error);
             });
@@ -170,23 +154,11 @@ export default class AttendeeInfoView extends LightningElement {
                 const updatedEvent = new CustomEvent('attendanceupdated', { detail: this.currentUserAttendeeId });
                 this.dispatchEvent(updatedEvent);
             } else {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: "Please Try Again!",
-                        message: "Hmmmm, Looks like the code you provided is incorrect, please ensure you have the correct confirmation code!",
-                        variant: "error"
-                    }),
-                );
+                this.showGenericErrorHelper();
             }
         })
         .catch(error => {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: "Something Went Wrong",
-                    message: "Hmmmm, Looks like something went wrong, please try again!",
-                    variant: "error"
-                }),
-            );
+            this.showGenericErrorHelper();
 
             window.console.log(error);
         })
@@ -194,5 +166,19 @@ export default class AttendeeInfoView extends LightningElement {
 
     handleAttendanceCodeCancelClicked() {
         this.showAttendanceConfirmInput = false;
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    // Helpers
+    //----------------------------------------------------------------------------------------------------
+
+    showGenericErrorHelper(){
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: "Something Went Wrong",
+                message: "Hmmmm, Looks like something went wrong, please try again!",
+                variant: "error"
+            }),
+        );
     }
 }
