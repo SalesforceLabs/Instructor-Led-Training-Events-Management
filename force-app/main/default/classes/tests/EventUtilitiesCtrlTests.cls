@@ -1,7 +1,7 @@
 @isTest
-public class ListViewCtrlTests {
+public class EventUtilitiesCtrlTests {
     
-    
+
 
     @testSetup
     static void setup(){
@@ -53,36 +53,14 @@ public class ListViewCtrlTests {
 
 
     @isTest
-    static void isEventSignUpExternal(){
-        ListViewReturnWrapper wrapper = ListViewCtrl.getListViewData(0, 2010, true, false);
-        System.assertEquals(1, wrapper.allEvents.size(), 'List view (all events) admin data not handled correctly');
-        System.assertEquals(0, wrapper.myEvents.size(), 'List view (my events) admin data not handled correctly');
+    static void isEventSignUpExternalTest(){
+        System.assertEquals(true, EventUtilitiesCtrl.isEventSignUpExternal('https://mydomaintest.force.com'), 'URL is not correctly verified');
     }
 
 
 
     @isTest
-    static void getListViewDataAdminNegativeTest(){
-        ListViewReturnWrapper wrapper = ListViewCtrl.getListViewData(1, 2010, true, false);
-        System.assertEquals(0, wrapper.allEvents.size(), 'List view admin (all events) negative data not handled correctly');
-        System.assertEquals(0, wrapper.myEvents.size(), 'List view admin (my events) negative data not handled correctly');
-    }
-
-
-
-    @isTest
-    static void getListViewDataAttendeeTest(){
-        ListViewReturnWrapper wrapper = ListViewCtrl.getListViewData(0, 2010, false, true);
-        System.assertEquals(1, wrapper.allEvents.size(), 'List view (all events) attendee data not handled correctly');
-        System.assertEquals(0, wrapper.myEvents.size(), 'List view (my events) attendee data not handled correctly');
-    }
-
-
-
-    @isTest
-    static void getListViewDataAttendeeNegativeTest(){
-        ListViewReturnWrapper wrapper = ListViewCtrl.getListViewData(1, 2010, false, true);
-        System.assertEquals(0, wrapper.allEvents.size(), 'List view (all events) attendee negative data not handled correctly');
-        System.assertEquals(0, wrapper.myEvents.size(), 'List view (my events) attendee negative data not handled correctly');
+    static void isEventSignUpExternalNegativeTest(){
+        System.assertEquals(false, EventUtilitiesCtrl.isEventSignUpExternal(System.URL.getOrgDomainUrl().toExternalForm()), 'URL is not correctly verified');
     }
 }

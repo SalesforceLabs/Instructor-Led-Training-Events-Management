@@ -65,34 +65,49 @@ public with sharing class EventAttendeeCtrl {
         @returns: String - Returns a generated url
     */
 
-    public static String getSignUpConfirmationUrl(Id eventAttendeeId){
+    public static String getSignUpConfirmationUrl(Id eventAttendeeId, Boolean isUserExternal){
 
-        // Get labels for community name and also the url to the confirmation page
-        String communityName = Label.Training_Events_Community;
-        String communityConfirmationPage = Label.Training_Events_Community_Confirmation_Page;
+        String signUpUrl = '';
 
-        String communityUrl = '';
+        if(isUserExternal == true){
+            // Get labels for community name and also the url to the confirmation page
+            String communityName = Label.Training_Events_Community;
+            String communityConfirmationPage = Label.Training_Events_Community_Confirmation_Page;
 
-        // Try get the communiy ifno and gen the new url
-        try{
-            Network myNetwork = [
-                SELECT Id 
-                FROM Network 
-                WHERE Name =: communityName
-                WITH SECURITY_ENFORCED
-            ];
+            // Try get the communiy ifno and gen the new url
+            try{
+                Network myNetwork = [
+                    SELECT Id 
+                    FROM Network 
+                    WHERE Name =: communityName
+                    WITH SECURITY_ENFORCED
+                ];
 
-            ConnectApi.Community  myCommunity = ConnectApi.Communities.getCommunity(myNetwork.id);
-            communityUrl = myCommunity.siteUrl + '/s/' + communityConfirmationPage + '?attendeeId=' + eventAttendeeId;
+                // Requires Admin Perms
+                /*
+                ConnectApi.Community  myCommunity = ConnectApi.Communities.getCommunity(myNetwork.id);
+                signUpUrl = myCommunity.siteUrl + '/s/' + communityConfirmationPage + '?attendeeId=' + eventAttendeeId;
+                */
 
-        }catch(Exception e){
-            system.debug(e.getMessage());
+                String communityLoginUrl = Network.getLoginUrl(myNetwork.Id);
+                String[] splitCommunityLoginUrl = communityLoginUrl.split('/');
+
+                signUpUrl = splitCommunityLoginUrl[0] + '//' + splitCommunityLoginUrl[2] + '/' + splitCommunityLoginUrl[3] + '/' + communityConfirmationPage + '?c__attendeeId=' + eventAttendeeId;
+
+            }catch(Exception e){
+                system.debug(e.getMessage());
+            }
+        } else {
+            String orgConfirmationPage = Label.Training_Events_Internal_Confirmation_Page;
+
+            signUpUrl = System.URL.getOrgDomainUrl().toExternalForm() + '/' + orgConfirmationPage + '?c__attendeeId=' + eventAttendeeId;
         }
+        
 
-        system.debug('EventAttendeeCtrl - getSignUpConfirmationUrl(): communityUrl');
-        system.debug(communityUrl);
+        system.debug('EventAttendeeCtrl - getSignUpConfirmationUrl(): signUpUrl');
+        system.debug(signUpUrl);
 
-        return communityUrl;
+        return signUpUrl;
     }
 
 
@@ -161,18 +176,19 @@ public with sharing class EventAttendeeCtrl {
         @description: Used to create a new event attendee record
         
         @param: currentUserId - Id of the current user thats trying to signup
-        @param: relatedEventId - Id of the current user thats trying to signup
-        @param: currentDomainName - Id of the current user thats trying to signup
+        @param: relatedEventId - Id of the related event that they are trying to signup for
+        @param: currentDomainUrl - Url of the signup page
 
         @returns: Boolean - To determine whether or not the record has been created or not
     */
     @AuraEnabled
-    public static Training_Event_Attendee__c createNewEventAttendee(Id currentUserId, Id relatedEventId, String currentDomainName){
+    public static Training_Event_Attendee__c createNewEventAttendee(Id currentUserId, Id relatedEventId, String currentDomainUrl){
         try {
             Training_Event_Attendee__c newAttendee = new Training_Event_Attendee__c();
 
             newAttendee.Related_User__c = currentUserId;
             newAttendee.Training_Event_Occurrence__c = relatedEventId;
+            newAttendee.Is_Attendee_External__c = EventUtilitiesCtrl.isEventSignUpExternal(currentDomainUrl);
 
             insert newAttendee;
 

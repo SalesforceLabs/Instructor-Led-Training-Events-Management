@@ -222,48 +222,4 @@ public with sharing class ListViewCtrl {
     private static String convertTimeToString(Time theTime){
         return String.valueOf(theTime).split(':')[0] + ':' + String.valueOf(theTime).split(':')[1];
     }
-
-
-    // Used to get a user map of all the instuctors so we can get their names
-    private static Map<Id, User> getInstructorMap(List<Training_Event_Occurrence__c> eventsList){
-
-        Map<Id, User> returnList = new Map<Id, User>();
-        List<User> resultList = new List<User>();
-        List<Id> userIdsList = new List<Id>();
-
-        // add user ids to list for the query
-        for (Training_Event_Occurrence__c eventOccur : eventsList){
-            userIdsList.add(eventOccur.Instructor__c);
-        }  
-
-        //remove duplicates
-        userIdsList = new List<Id>(new Set<Id>(userIdsList));
-
-        system.debug('ListViewCtrl - getInstructorMap(): userIdsList');
-        system.debug(userIdsList);
-
-        // Try to execute to query and catch any errors
-        try {
-            
-            resultList = [
-                SELECT Id, Name, Email
-                FROM User
-                WHERE Id IN :userIdsList
-                WITH SECURITY_ENFORCED
-            ];
-
-            for(User user: resultList){
-                returnList.put(user.Id, user);
-            }
-
-        } catch(QueryException e) {
-            system.debug(e.getMessage());
-            returnList = null;
-        } // end try / catch
-
-        system.debug('ListViewCtrl - getInstructorMap(): returnList');
-        system.debug(returnList);
-
-        return returnList;
-    }
 }

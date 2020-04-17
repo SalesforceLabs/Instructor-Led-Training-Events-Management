@@ -78,12 +78,12 @@ export default class AttendeeInfoView extends LightningElement {
     //----------------------------------------------------------------------------------------------------
 
     handleUserSignUpClicked() {
-        let pathName = window.location.pathname;
+        let domainUrl = window.location.protocol + '//' + window.location.hostname;
 
-        createNewEventAttendee({ currentUserId : Id, relatedEventId : this.eventId, currentDomainName : pathName  })
+        createNewEventAttendee({ currentUserId : Id, relatedEventId : this.eventId, currentDomainUrl : domainUrl  })
             .then(trainingEventAttendee => {
                 if(trainingEventAttendee !== undefined){
-                    this.newAttendeeId = trainingEventAttendee.id;
+                    this.newAttendeeId = trainingEventAttendee.Id;
                     this.dispatchEvent(
                         new ShowToastEvent({
                             title: 'Success',

@@ -77,12 +77,9 @@ public class EventAttendeeCtrlTests {
     }
 
 
-    /*
-
-    CANNOT RUN TEST AS METHOD IS UNSUPPORTED FOR TEST RUN
 
     @isTest
-    static void getSignUpConfirmationUrlTest(){
+    static void getSignUpConfirmationUrlInternalTest(){
 
         Training_Event_Attendee__c testEventAttendee = [
             SELECT Id, Related_User__c, Training_Event_Occurrence__c
@@ -90,9 +87,22 @@ public class EventAttendeeCtrlTests {
             WHERE Related_User__r.Name = 'Test Test'
         ];
 
-        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
+        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, false).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
     }
-    */
+
+
+
+    @isTest
+    static void getSignUpConfirmationUrlExternalTest(){
+
+        Training_Event_Attendee__c testEventAttendee = [
+            SELECT Id, Related_User__c, Training_Event_Occurrence__c
+            FROM Training_Event_Attendee__c
+            WHERE Related_User__r.Name = 'Test Test'
+        ];
+
+        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, true).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
+    }
 
 
 
@@ -101,5 +111,20 @@ public class EventAttendeeCtrlTests {
         Map<Id, User> testUserMap = EventAttendeeCtrl.getTrainingEventAttendeeUsersMap(EventOccuranceCtrl.getTrainingEventOccurancesWithDate(1, 2010, false));
 
         System.assertEquals(1, testUserMap.size(), 'User Map Does Not Match');
+    }
+
+
+
+    @isTest
+    static void createNewEventAttendeeTest(){
+        Training_Event_Occurrence__c testEventOccurance = [
+            SELECT Id, Name, Attendance_Confirmation_Code__c
+            FROM Training_Event_Occurrence__c
+            WHERE Training_Event__r.Name = 'Test Event'
+        ];
+
+        User ownerUser = [SELECT Id FROM User WHERE Username = 'tester@apextesteruser.test'];
+
+        System.assertEquals(false, EventAttendeeCtrl.createNewEventAttendee(ownerUser.Id, testEventOccurance.Id, System.URL.getOrgDomainUrl().toExternalForm()).Is_Attendee_External__c, 'User sign up locations dont match');
     }
 }

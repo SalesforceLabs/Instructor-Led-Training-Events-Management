@@ -22,14 +22,16 @@ export default class AttendeeSignUpConfirmation extends LightningElement {
     connectedCallback() {
         this.parameters = this.getQueryParameters();
 
-        if ('attendeeId' in this.parameters){
-            if (this.parameters.attendeeId !== undefined ){
-                this.checkUserDetails(this.parameters.attendeeId);
+        if ('c__attendeeId' in this.parameters){
+            if (this.parameters.c__attendeeId !== undefined ){
+                this.checkUserDetails(this.parameters.c__attendeeId);
             } else {
-                this.showNoRecordsMessage = false;
+                this.signUpConfirmed = true;
+                this.showNoRecordsMessage = true;
             }
         } else {
-            this.showNoRecordsMessage = false;
+            this.signUpConfirmed = true;
+            this.showNoRecordsMessage = true;
         }
     }
 
