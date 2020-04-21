@@ -30,25 +30,8 @@ public with sharing class EventUtilitiesCtrl {
     }
 
 
-    //***************************************************************************
-    // Remove this
-    
-    public static void testSendEmail(String attendeeId){
-        Training_Event_Attendee__c testAttendee = [
-            SELECT Id, Email_Sign_Up_Confirmation_Link__c, Related_User__c, Related_User__r.Name, Related_User__r.Email, Training_Event_Occurrence__c
-            FROM Training_Event_Attendee__c
-            WHERE Id =: attendeeId
-        ];
 
-        Training_Event_Occurrence__c testEvent = [
-            SELECT Id, RecordTypeId, City__c, Country__c, End_Date_Time__c, Instructor__c, Instructor__r.Name, Instructor__r.Email, Meeting_Link__c, Postal_Code__c, PreWork__c, Start_Date_Time__c, Street__c, Training_Event_Name__c 
-            FROM Training_Event_Occurrence__c
-            WHERE Id =: testAttendee.Training_Event_Occurrence__c
-        ];
-        
-        createConfirmationEmail(testAttendee, testEvent);
-    }
-
+    // REDUNDANT E-MAIL CODE THAT HAS BEEN REPLACED VIA E-MAIL TEMPLATES
 
     /*
         @name: createConfirmationEmail
@@ -60,13 +43,14 @@ public with sharing class EventUtilitiesCtrl {
 
         @returns: Boolean - To determine whether or not the user is external or not
     */
+    /*
     private static Boolean createConfirmationEmail(Training_Event_Attendee__c emailRecipient, Training_Event_Occurrence__c relatedEvent){
 
         // Setup Email
         Messaging.SingleEmailMessage newEmail = new Messaging.SingleEmailMessage();
      	String[] toAddresses = new String[] {emailRecipient.Related_User__r.Email}; 
         newEmail.setToAddresses(toAddresses);
-        OrgWideEmailAddress owea = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName = 'myTrailhead Training'];
+        OrgWideEmailAddress owea = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName = 'OWE_NAME'];
         newEmail.setOrgWideEmailAddressId(owea.Id);
         newEmail.setSubject('Thanks For Signing Up!');
         newEmail.setPlainTextBody(createEmailBody(emailRecipient, relatedEvent));  
@@ -87,6 +71,7 @@ public with sharing class EventUtilitiesCtrl {
             return false;
         }
     }
+    */
 
 
 
@@ -100,6 +85,7 @@ public with sharing class EventUtilitiesCtrl {
 
         @returns: Boolean - To determine whether or not the user is external or not
     */
+    /*
     private static String createEmailBody(Training_Event_Attendee__c emailRecipient, Training_Event_Occurrence__c relatedEvent){
 
         // determine the event type for later!
@@ -144,6 +130,7 @@ public with sharing class EventUtilitiesCtrl {
 
         return emailBodyText;
     }
+    */
 
 
 
@@ -157,6 +144,7 @@ public with sharing class EventUtilitiesCtrl {
 
         @returns: Blob - The attachement blob
     */
+    /*
     private static Blob createICSInviteAttachment(Training_Event_Attendee__c emailRecipient, Training_Event_Occurrence__c relatedEvent){
 
         // Event record type to check for later
@@ -222,4 +210,5 @@ public with sharing class EventUtilitiesCtrl {
         
         return Blob.valueOf(txtInvite);
     }
+    */
 }
