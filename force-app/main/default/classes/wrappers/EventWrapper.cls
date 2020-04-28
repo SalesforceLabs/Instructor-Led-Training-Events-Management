@@ -42,7 +42,13 @@ public with sharing class EventWrapper {
     public String EventType { get; set; }
 
     @AuraEnabled
+    public String InstructorId { get; set; }
+
+    @AuraEnabled
     public String InstructorName { get; set; }
+
+    @AuraEnabled
+    public Boolean CurrentUserIsInstructor { get; set; }
 
     @AuraEnabled
     public List<AttendeesWrapper> Attendees { get; set; }

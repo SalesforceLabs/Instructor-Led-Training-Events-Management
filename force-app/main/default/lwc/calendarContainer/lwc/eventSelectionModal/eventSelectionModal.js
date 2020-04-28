@@ -1,4 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
+import { deleteRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class EventSelectionModal extends LightningElement {
 
@@ -70,15 +72,39 @@ export default class EventSelectionModal extends LightningElement {
         } 
         return '';
     }
+
+    get isUserEventOwner(){
+        if(this.showEventModal){
+            return this.modalData.CurrentUserIsInstructor;
+        }
+
+        if(this.showEventsModal){
+            if(this.selectedRecord !== undefined){
+                return this.selectedRecord.CurrentUserIsInstructor;
+            } else{
+                return false;
+            }
+        }
+    }
         
     //----------------------------------------------------------------------------------------------------
     // Onclick / Event Handlers
     //----------------------------------------------------------------------------------------------------
 
     handleAttendeeDeleted(event){
-        const parentEvent = new CustomEvent("recordchanged", { detail : event.detail });
-        this.dispatchEvent(parentEvent);
-        this.closeClickedHandler();
+        this.recordChangedHelper(event.detail)
+    }
+
+    handleDeleteEventClicked(){
+        if(confirm("Are you sure you want to delete this event?")){
+
+            let recordId;
+
+            if(this.showEventModal){ recordId = this.modalData.Id; }
+            if(this.showEventsModal){ recordId = this.selectedRecordId; }
+
+            this.deleteEventHelper(recordId);
+        }
     }
 
     cancelClickedHandler() {
@@ -103,5 +129,39 @@ export default class EventSelectionModal extends LightningElement {
         } else {
             this.selectedAttendeeList = tempList;
         }
+    }
+
+    //----------------------------------------------------------------------------------------------------
+    // Onclick / Event Handlers
+    //----------------------------------------------------------------------------------------------------
+
+    deleteEventHelper(recordId){
+        deleteRecord(recordId)
+            .then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'We have successfully deleted the event!',
+                        variant: 'success'
+                    })
+                );
+
+                this.recordChangedHelper(recordId);
+            })
+            .catch(error => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: "Something Went Wrong",
+                        message: "Hmmmm, Looks like something went wrong, please try again!",
+                        variant: "error"
+                    }),
+                );
+            });
+    }
+
+    recordChangedHelper(recordId){
+        const parentEvent = new CustomEvent("recordchanged", { detail : recordId });
+        this.dispatchEvent(parentEvent);
+        this.closeClickedHandler();
     }
 }

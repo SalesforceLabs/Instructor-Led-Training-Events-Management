@@ -25,18 +25,36 @@
                                         <lightning-record-form record-id={modalData.Id}
                                             object-api-name={objectData.apiName} layout-type="Full" mode="view">
                                         </lightning-record-form>
+
+                                        <template if:true={isUserEventOwner}>
+                                            <div class="slds-p-around_medium slds-text-align_center">
+                                                <button class="slds-button slds-button_destructive" onclick={handleDeleteEventClicked}>
+                                                    <span class="slds-p-vertical_xx-small">
+                                                        <span class="slds-p-right_xx-small">
+                                                            <lightning-icon icon-name="utility:delete" alternative-text="" variant="inverse" size="xx-small"></lightning-icon>
+                                                        </span>
+                                                        <span class="slds-p-left_xx-small text-bold">Delete Event</span>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </template>
                                     </section>
 
                                 </lightning-accordion-section>
 
-                                <lightning-accordion-section name="attendees" label="Attendees">
+                                <template if:true={isUserEventOwner}>
 
-                                    <section class="slds-p-around_small max-width">
-                                        <c-attendee-list-view attendee-list={modalData.Attendees}
-                                            onattendeeremoved={handleAttendeeDeleted}></c-attendee-list-view>
-                                    </section>
+                                    <lightning-accordion-section name="attendees" label="Attendees">
 
-                                </lightning-accordion-section>
+                                        <section class="slds-p-around_small max-width">
+                                            <c-attendee-list-view attendee-list={modalData.Attendees}
+                                                onattendeeremoved={handleAttendeeDeleted}></c-attendee-list-view>
+                                        </section>
+    
+                                    </lightning-accordion-section>
+
+                                </template>
+                                
                             </lightning-accordion>
                         </template>
 
@@ -75,6 +93,21 @@
                                                         object-api-name={objectData.apiName} layout-type="Full"
                                                         mode="view">
                                                     </lightning-record-form>
+
+                                                    <template if:true={isUserEventOwner}>
+                                                        <div class="slds-p-around_medium slds-text-align_center">
+                                                            <button class="slds-button slds-button_destructive" onclick={handleDeleteEventClicked}>
+                                                                <span class="slds-p-vertical_xx-small">
+                                                                    <span class="slds-p-right_xx-small">
+                                                                        <lightning-icon icon-name="utility:delete" alternative-text="" variant="inverse" size="xx-small"></lightning-icon>
+                                                                    </span>
+                                                                    <span class="slds-p-left_xx-small text-bold">Delete Event</span>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </template>
+                                                    
+                                                    </div>
                                                 </template>
 
                                                 <template if:false={showRecordData}>
@@ -85,23 +118,28 @@
 
                                         </lightning-accordion-section>
 
-                                        <lightning-accordion-section name="attendees" label="Attendees">
+                                        <template if:true={isUserEventOwner}>
 
-                                            <section class="slds-p-around_small max-width">
+                                            <lightning-accordion-section name="attendees" label="Attendees">
 
-                                                <template if:true={showAttendeeData}>
-                                                    <c-attendee-list-view attendee-list={selectedAttendeeList}
-                                                        onattendeeremoved={handleAttendeeDeleted}>
-                                                    </c-attendee-list-view>
-                                                </template>
+                                                <section class="slds-p-around_small max-width">
+    
+                                                    <template if:true={showAttendeeData}>
+                                                        <c-attendee-list-view attendee-list={selectedAttendeeList}
+                                                            onattendeeremoved={handleAttendeeDeleted}>
+                                                        </c-attendee-list-view>
+                                                    </template>
+    
+                                                    <template if:false={showAttendeeData}>
+                                                        Please select an event...
+                                                    </template>
+    
+                                                </section>
+    
+                                            </lightning-accordion-section>
 
-                                                <template if:false={showAttendeeData}>
-                                                    Please select an event...
-                                                </template>
-
-                                            </section>
-
-                                        </lightning-accordion-section>
+                                        </template>
+                                        
                                     </lightning-accordion>
 
                                 </div>
@@ -138,13 +176,21 @@
                                         Attendance
                                     </h2>
                                     
-                                    <c-attendee-info-view 
-                                        onattendanceupdated={handleAttendeeDeleted}
-                                        current-user-attending={modalData.CurrentUserRegistered}
-                                        current-user-attendee-info={modalData.CurrentUserAttendee}
-                                        event-id={modalData.Id}>
-                                    </c-attendee-info-view>
+                                    <template if:false={isUserEventOwner}>
+                                        <c-attendee-info-view 
+                                            onattendanceupdated={handleAttendeeDeleted}
+                                            current-user-attending={modalData.CurrentUserRegistered}
+                                            current-user-attendee-info={modalData.CurrentUserAttendee}
+                                            event-id={modalData.Id}>
+                                        </c-attendee-info-view>
+                                    </template>
 
+                                    <template if:true={isUserEventOwner}>
+                                        <div class="slds-text-align_center text-bold">
+                                            Looks like you're the insructor for this event! You're already on the list.
+                                        </div>
+                                    </template>
+                                    
                                 </div>
                             </section>
                         </template>
@@ -194,13 +240,21 @@
                                                     Attendance
                                                 </h2>
 
-                                                <c-attendee-info-view
-                                                    onattendanceupdated={handleAttendeeDeleted}
-                                                    current-user-attending={selectedRecord.CurrentUserRegistered}
-                                                    current-user-attendee-info={selectedRecord.CurrentUserAttendee}
-                                                    event-id={selectedRecordId}>
-                                                </c-attendee-info-view>
+                                                <template if:false={isUserEventOwner}>
+                                                    <c-attendee-info-view
+                                                        onattendanceupdated={handleAttendeeDeleted}
+                                                        current-user-attending={selectedRecord.CurrentUserRegistered}
+                                                        current-user-attendee-info={selectedRecord.CurrentUserAttendee}
+                                                        event-id={selectedRecordId}>
+                                                    </c-attendee-info-view>
+                                                </template>
 
+                                                <template if:true={isUserEventOwner}>
+                                                    <div class="slds-text-align_center text-bold">
+                                                        Looks like you're the insructor for this event! You're already on the list.
+                                                    </div>
+                                                </template>
+                                                
                                             </div>
                                         </template>
 

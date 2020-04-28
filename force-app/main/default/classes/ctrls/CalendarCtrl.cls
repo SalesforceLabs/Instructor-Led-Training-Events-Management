@@ -103,9 +103,13 @@ public with sharing class CalendarCtrl {
                         tempEventWrapper.NumAttendees = resultItem.Number_Attendees__c;
                         tempEventWrapper.EventFull = true;
                         tempEventWrapper.EventType = Schema.SObjectType.Training_Event_Occurrence__c.getRecordTypeInfosById().get(resultItem.RecordTypeId).getName();
+                        tempEventWrapper.InstructorId = resultItem.Instructor__c;
                         tempEventWrapper.InstructorName = resultItem.Instructor__r.Name;
+                        tempEventWrapper.CurrentUserIsInstructor = false;
                         tempEventWrapper.CurrentUserRegistered = false;
                         tempEventWrapper.CurrentUserAttendee = null;
+
+                        if( tempEventWrapper.InstructorId == UserInfo.getUserId()) { tempEventWrapper.CurrentUserIsInstructor = true; } 
 
                         // Loop through attendees and add them to the wrapper
                         if(resultItem.Training_Event_Attendees__r.size() > 0){
