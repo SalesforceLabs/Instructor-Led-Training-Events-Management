@@ -283,17 +283,18 @@ export default class CalendarContainer extends LightningElement {
 
             //Check if there are any events
             if('Events' in currentSFDateData) {
-
-                if(currentSFDateData.Events.length > 2){
-                    tempData.shortList = currentSFDateData.Events.slice(0,2);
-                    tempData.fullList = currentSFDateData.Events;
-                    tempData.numItems = currentSFDateData.Events.length;
-                    tempData.numHiddenItems = currentSFDateData.Events.length - 2;
-                } else {
-                    tempData.shortList = currentSFDateData.Events;
-                    tempData.fullList = currentSFDateData.Events;
-                    tempData.numItems = currentSFDateData.Events.length;
-                    tempData.numHiddenItems = 0;
+                if(currentSFDateData.Events !== undefined ){
+                    if(currentSFDateData.Events.length > 2){
+                        tempData.shortList = currentSFDateData.Events.slice(0,2);
+                        tempData.fullList = currentSFDateData.Events;
+                        tempData.numItems = currentSFDateData.Events.length;
+                        tempData.numHiddenItems = currentSFDateData.Events.length - 2;
+                    } else {
+                        tempData.shortList = currentSFDateData.Events;
+                        tempData.fullList = currentSFDateData.Events;
+                        tempData.numItems = currentSFDateData.Events.length;
+                        tempData.numHiddenItems = 0;
+                    }
                 }
             }
         }
