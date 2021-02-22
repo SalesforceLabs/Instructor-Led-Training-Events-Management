@@ -27,7 +27,12 @@ public with sharing class EventOccuranceCtrl {
             // Check the code matches and that hey haven't confirmed attendance already
             if(eventAttendee.Training_Event_Occurrence__r.Attendance_Confirmation_Code__c == confirmationCode && eventAttendee.Attendance_Confirmed__c == false) {
                 eventAttendee.Attendance_Confirmed__c = true;
-                update eventAttendee;
+
+                List<Training_Event_Attendee__c> recordsToUpdate = new List<Training_Event_Attendee__c>();
+                recordsToUpdate.add(eventAttendee);
+                SObjectAccessDecision securityDecision = Security.stripInaccessible(AccessType.UPDATABLE, recordsToUpdate);
+                update securityDecision.getRecords();
+
                 returnBoolean = true;
             }
 

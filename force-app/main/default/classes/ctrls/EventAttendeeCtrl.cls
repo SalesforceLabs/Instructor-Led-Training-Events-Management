@@ -39,7 +39,12 @@ public with sharing class EventAttendeeCtrl {
             } else {
                 // sign user up
                 currentAttendee.Sign_Up_Confirmed__c = true;
-                update currentAttendee;
+
+                List<Training_Event_Attendee__c> recordsToUpdate = new List<Training_Event_Attendee__c>();
+                recordsToUpdate.add(currentAttendee);
+                SObjectAccessDecision securityDecision = Security.stripInaccessible(AccessType.UPDATABLE, recordsToUpdate);
+                update securityDecision.getRecords();
+
                 returnWrapper.signUpConfirmed = true;
             }
         // no records found
@@ -65,7 +70,7 @@ public with sharing class EventAttendeeCtrl {
         @returns: String - Returns a generated url
     */
 
-    public static String getSignUpConfirmationUrl(Id eventAttendeeId, Boolean isUserExternal){
+    public static String getSignUpConfirmationUrl(Id eventAttendeeId, Boolean isUserExternal, Boolean isTestRun){
 
         String signUpUrl = '';
 
@@ -75,27 +80,31 @@ public with sharing class EventAttendeeCtrl {
             String communityConfirmationPage = Label.Training_Events_Community_Confirmation_Page;
 
             // Try get the communiy ifno and gen the new url
-            try{
-                Network myNetwork = [
-                    SELECT Id 
-                    FROM Network 
-                    WHERE Name =: communityName
-                    WITH SECURITY_ENFORCED
-                ];
-
-                // Requires Admin Perms
-                /*
-                ConnectApi.Community  myCommunity = ConnectApi.Communities.getCommunity(myNetwork.id);
-                signUpUrl = myCommunity.siteUrl + '/s/' + communityConfirmationPage + '?attendeeId=' + eventAttendeeId;
-                */
-
-                String communityLoginUrl = Network.getLoginUrl(myNetwork.Id);
-                String[] splitCommunityLoginUrl = communityLoginUrl.split('/');
-
-                signUpUrl = splitCommunityLoginUrl[0] + '//' + splitCommunityLoginUrl[2] + '/' + splitCommunityLoginUrl[3] + '/' + communityConfirmationPage + '?c__attendeeId=' + eventAttendeeId;
-
-            }catch(Exception e){
-                system.debug(e.getMessage());
+            if(isTestRun == false){
+                try{
+                    Network myNetwork = [
+                        SELECT Id 
+                        FROM Network 
+                        WHERE Name =: communityName
+                        WITH SECURITY_ENFORCED
+                    ];
+    
+                    // Requires Admin Perms
+                    /*
+                    ConnectApi.Community  myCommunity = ConnectApi.Communities.getCommunity(myNetwork.id);
+                    signUpUrl = myCommunity.siteUrl + '/s/' + communityConfirmationPage + '?attendeeId=' + eventAttendeeId;
+                    */
+    
+                    String communityLoginUrl = Network.getLoginUrl(myNetwork.Id);
+                    String[] splitCommunityLoginUrl = communityLoginUrl.split('/');
+    
+                    signUpUrl = splitCommunityLoginUrl[0] + '//' + splitCommunityLoginUrl[2] + '/' + splitCommunityLoginUrl[3] + '/' + communityConfirmationPage + '?c__attendeeId=' + eventAttendeeId;
+    
+                }catch(Exception e){
+                    system.debug(e.getMessage());
+                }
+            } else {
+                signUpUrl = 'www.salesforce.com/test' + '?c__attendeeId=' + eventAttendeeId; 
             }
         } else {
             String orgConfirmationPage = Label.Training_Events_Internal_Confirmation_Page;
@@ -184,15 +193,25 @@ public with sharing class EventAttendeeCtrl {
     @AuraEnabled
     public static Training_Event_Attendee__c createNewEventAttendee(Id currentUserId, Id relatedEventId, String currentDomainUrl){
         try {
+            List<Training_Event_Attendee__c> recordsToInsert = new List<Training_Event_Attendee__c>();
             Training_Event_Attendee__c newAttendee = new Training_Event_Attendee__c();
 
             newAttendee.Related_User__c = currentUserId;
             newAttendee.Training_Event_Occurrence__c = relatedEventId;
             newAttendee.Is_Attendee_External__c = EventUtilitiesCtrl.isEventSignUpExternal(currentDomainUrl);
+            recordsToInsert.add(newAttendee);
 
-            insert newAttendee;
+            SObjectAccessDecision securityDecision = Security.stripInaccessible(AccessType.CREATABLE, recordsToInsert);
 
-            return newAttendee;
+            List<Training_Event_Attendee__c> newAttendees = securityDecision.getRecords();
+            insert newAttendees;
+
+            if(newAttendees != null){
+                return newAttendees.get(0);
+            } else {
+                return null;
+            }
+
         } catch(Exception e){
             System.debug(e.getMessage());
             return null;

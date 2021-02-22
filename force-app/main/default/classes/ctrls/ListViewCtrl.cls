@@ -155,7 +155,7 @@ public with sharing class ListViewCtrl {
                     tempEventWrapper.StartDate = currentRecordStartDate;
                     tempEventWrapper.StartDateString = currentRecordStartDate.format();
                     tempEventWrapper.EndDate = currentRecordEndDate;
-                    tempEventWrapper.EndDateString = currentRecordStartDate.format();
+                    tempEventWrapper.EndDateString = currentRecordEndDate.format();
                     tempEventWrapper.StartTime = currentRecordStartTime;
                     tempEventWrapper.StartTimeString = convertTimeToString(currentRecordStartTime);
                     tempEventWrapper.EndTime = currentRecordEndTime;

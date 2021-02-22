@@ -87,7 +87,7 @@ public class EventAttendeeCtrlTests {
             WHERE Related_User__r.Name = 'Test Test'
         ];
 
-        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, false).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
+        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, false, true).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
     }
 
 
@@ -101,7 +101,7 @@ public class EventAttendeeCtrlTests {
             WHERE Related_User__r.Name = 'Test Test'
         ];
 
-        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, true).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
+        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, true, true).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
     }
 
 

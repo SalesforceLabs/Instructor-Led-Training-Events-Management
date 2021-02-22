@@ -1,4 +1,5 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
+import { CurrentPageReference } from "lightning/navigation";
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import confirmAttendeeSignUp from '@salesforce/apex/EventAttendeeCtrl.confirmAttendeeSignUp';
 
@@ -11,27 +12,23 @@ export default class AttendeeSignUpConfirmation extends LightningElement {
     //**********************************************************************************************
     // LOCAL VARIABLES
 
-    @track parameters = {};
+    @track pageRef;
+    
+    @track isLoading = true;
     @track signUpConfirmed = false;
-    @track showNoRecordsMessage = false;
 
-    //----------------------------------------------------------------------------------------------------
-    // HOOKS
-    //----------------------------------------------------------------------------------------------------
+    // WIRE VARIABLES
+    @wire(CurrentPageReference)
+    wiredPageRef(pageRef) {
+        if (pageRef) {
+            this.pageRef = pageRef;
 
-    connectedCallback() {
-        this.parameters = this.getQueryParameters();
-
-        if ('c__attendeeId' in this.parameters){
-            if (this.parameters.c__attendeeId !== undefined ){
-                this.checkUserDetails(this.parameters.c__attendeeId);
+            if (pageRef.state.c__attendeeId) {
+                this.checkUserDetails(decodeURIComponent(pageRef.state.c__attendeeId));
             } else {
-                this.signUpConfirmed = true;
+                this.isLoading = false;
                 this.showNoRecordsMessage = true;
             }
-        } else {
-            this.signUpConfirmed = true;
-            this.showNoRecordsMessage = true;
         }
     }
 
@@ -39,31 +36,18 @@ export default class AttendeeSignUpConfirmation extends LightningElement {
     // HELPERS
     //----------------------------------------------------------------------------------------------------
 
-    getQueryParameters() {
-        var params = {};
-        var search = location.search.substring(1);
-
-        if (search) {
-            params = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', (key, value) => {
-                return key === "" ? value : decodeURIComponent(value)
-            });
-        }
-
-        return params;
-    }
-
     checkUserDetails(attendeeRecordId) {
         confirmAttendeeSignUp({ attendeeRecordId : attendeeRecordId })
             .then(result => {
                 if(result.signUpAlreadyConfirmed === true){
-                    this.signUpConfirmed = true;
+                    this.isLoading = false;
                 } 
                 if(result.signUpConfirmed === true){
                     this.showSuccessMessage();
-                    this.signUpConfirmed = true;
+                    this.isLoading = false;
                 } 
                 if(result.noRecordFound === true){
-                    this.signUpConfirmed = true;
+                    this.isLoading = false;
                     this.showNoRecordsMessage = true;
                 }
             })
