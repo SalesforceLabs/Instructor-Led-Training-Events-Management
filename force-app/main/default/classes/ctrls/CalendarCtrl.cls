@@ -1,8 +1,14 @@
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
 public with sharing class CalendarCtrl {
     
     /*
         @name: getCalendarData
-        @createdBy: Daniel Tilley
         @description: Used to retreive a list of data for the respective object whos api name is passed to the function
         
         @param: showUserRecordsOnly - A boolean to decide whether or not to render the owners records
@@ -40,7 +46,6 @@ public with sharing class CalendarCtrl {
     
     /*
         @name: convertResultsToWrapper
-        @createdBy: Daniel Tilley
         @description: Used to transform a list of SObjects to a Wrapper List
         
         @param: eventOccuranceList - the results from the query
@@ -164,7 +169,6 @@ public with sharing class CalendarCtrl {
 
     /*
         @name: convertTimeToString
-        @createdBy: Daniel Tilley
         @description: Used to convert a Time variable to a string variable
         
         @param: theTime - the time var to convert

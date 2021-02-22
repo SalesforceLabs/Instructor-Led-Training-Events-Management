@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
 @isTest
 public class EventAttendeeCtrlTests {
 
@@ -87,7 +94,7 @@ public class EventAttendeeCtrlTests {
             WHERE Related_User__r.Name = 'Test Test'
         ];
 
-        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, false).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
+        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, false, true).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
     }
 
 
@@ -101,7 +108,7 @@ public class EventAttendeeCtrlTests {
             WHERE Related_User__r.Name = 'Test Test'
         ];
 
-        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, true).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
+        System.assertEquals(true, EventAttendeeCtrl.getSignUpConfirmationUrl(testEventAttendee.Id, true, true).contains(testEventAttendee.Id), 'Sign Up URL Does Not Match');
     }
 
 

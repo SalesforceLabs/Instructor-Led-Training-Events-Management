@@ -1,3 +1,12 @@
+<!--
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+-->
+
 <template>
     <lightning-card>
         <div class="slds-p-vertical_xx-small slds-text-heading_medium slds-align--absolute-center">
@@ -5,7 +14,7 @@
         </div>
         <div slot="footer">
             <div class="slds-grid slds-grid_vertical slds-align_absolute-center">
-                <template if:false={signUpConfirmed}>
+                <template if:true={isLoading}>
 
                     <div class="slds-col">
                         <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
@@ -13,7 +22,7 @@
 
                 </template>
 
-                <template if:true={signUpConfirmed}>
+                <template if:false={isLoading}>
                     <template if:true={showNoRecordsMessage}>
 
                         <div class="slds-col">

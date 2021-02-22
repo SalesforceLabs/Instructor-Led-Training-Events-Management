@@ -1,8 +1,14 @@
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
 public with sharing class EventOccuranceCtrl {
 
     /*
         @name: confirmAttendeeEventAttendance
-        @createdBy: Daniel Tilley
         @description: Used to generate a confirmation code
         
         @param: eventAttendeeId - The Id of the attendee
@@ -27,7 +33,12 @@ public with sharing class EventOccuranceCtrl {
             // Check the code matches and that hey haven't confirmed attendance already
             if(eventAttendee.Training_Event_Occurrence__r.Attendance_Confirmation_Code__c == confirmationCode && eventAttendee.Attendance_Confirmed__c == false) {
                 eventAttendee.Attendance_Confirmed__c = true;
-                update eventAttendee;
+
+                List<Training_Event_Attendee__c> recordsToUpdate = new List<Training_Event_Attendee__c>();
+                recordsToUpdate.add(eventAttendee);
+                SObjectAccessDecision securityDecision = Security.stripInaccessible(AccessType.UPDATABLE, recordsToUpdate);
+                update securityDecision.getRecords();
+
                 returnBoolean = true;
             }
 
@@ -46,7 +57,6 @@ public with sharing class EventOccuranceCtrl {
 
     /*
         @name: generateAttendanceConfirmationCode
-        @createdBy: Daniel Tilley
         @description: Used to generate a confirmation code
         
         @param: len - length of the confirmation code
@@ -74,7 +84,6 @@ public with sharing class EventOccuranceCtrl {
 
     /*
         @name: getTrainingEventOccurancesWithDate
-        @createdBy: Daniel Tilley
         @description: Used to obtain a list of training event occurences
         
         @param: currentMonth - Current month as a number (0-11)
@@ -128,7 +137,6 @@ public with sharing class EventOccuranceCtrl {
 
     /*
         @name: getAttendeeEventOccurances
-        @createdBy: Daniel Tilley
         @description: Used to obtain a list of training event occurences which a user is attending
         
         @param: allEvents - list of all events for a given month
