@@ -1,8 +1,14 @@
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
 public with sharing class EventOccuranceCtrl {
 
     /*
         @name: confirmAttendeeEventAttendance
-        @createdBy: Daniel Tilley
         @description: Used to generate a confirmation code
         
         @param: eventAttendeeId - The Id of the attendee
@@ -51,7 +57,6 @@ public with sharing class EventOccuranceCtrl {
 
     /*
         @name: generateAttendanceConfirmationCode
-        @createdBy: Daniel Tilley
         @description: Used to generate a confirmation code
         
         @param: len - length of the confirmation code
@@ -79,7 +84,6 @@ public with sharing class EventOccuranceCtrl {
 
     /*
         @name: getTrainingEventOccurancesWithDate
-        @createdBy: Daniel Tilley
         @description: Used to obtain a list of training event occurences
         
         @param: currentMonth - Current month as a number (0-11)
@@ -133,7 +137,6 @@ public with sharing class EventOccuranceCtrl {
 
     /*
         @name: getAttendeeEventOccurances
-        @createdBy: Daniel Tilley
         @description: Used to obtain a list of training event occurences which a user is attending
         
         @param: allEvents - list of all events for a given month

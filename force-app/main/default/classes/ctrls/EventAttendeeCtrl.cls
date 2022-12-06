@@ -1,8 +1,14 @@
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
 public with sharing class EventAttendeeCtrl {
     
     /*
         @name: confirmAttendeeSignUp
-        @createdBy: Daniel Tilley
         @description: Used to confirm the attendees sign up
         
         @param: attendeeRecordId - The ID related to the attendee
@@ -62,7 +68,6 @@ public with sharing class EventAttendeeCtrl {
 
     /*
         @name: getSignUpConfirmationUrl
-        @createdBy: Daniel Tilley
         @description: Used to generate a signup confirmation url that an attendee will click
         
         @param: eventAttendeeId - The ID related to the attendee
@@ -123,7 +128,6 @@ public with sharing class EventAttendeeCtrl {
 
     /*
         @name: getTrainingEventAttendeeUsersMap
-        @createdBy: Daniel Tilley
         @description: Used to obtain a list of training event attendees
         
         @param: eventsList - list of events that have been returned from a previous query
@@ -181,7 +185,6 @@ public with sharing class EventAttendeeCtrl {
 
     /*
         @name: createNewEventAttendee
-        @createdBy: Daniel Tilley
         @description: Used to create a new event attendee record
         
         @param: currentUserId - Id of the current user thats trying to signup

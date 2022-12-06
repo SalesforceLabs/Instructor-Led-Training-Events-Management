@@ -1,8 +1,14 @@
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
 public with sharing class ListViewCtrl {
 
     /*
         @name: getListViewData
-        @createdBy: Daniel Tilley
         @description: Used to retreive a list events
         
         @param: currentMonth - Current month as a number (0-11)
@@ -37,7 +43,6 @@ public with sharing class ListViewCtrl {
 
     /*
         @name: getAdminRecords
-        @createdBy: Daniel Tilley
         @description: Used to get the list of events for admins in a given month / year
         
         @param: allEvents - the events to convert
@@ -55,7 +60,6 @@ public with sharing class ListViewCtrl {
 
     /*
         @name: convertAdminEventOccuranceListToWrapper
-        @createdBy: Daniel Tilley
         @description: Used to convert a list of event occurances to Event Wrappers for admins
         
         @param: allEvents - the events to convert
@@ -78,7 +82,6 @@ public with sharing class ListViewCtrl {
 
     /*
         @name: getAttendeeRecords
-        @createdBy: Daniel Tilley
         @description: Used to get the list of events for attendees in a given month / year
         
         @param: allEvents - the events to convert
@@ -97,7 +100,6 @@ public with sharing class ListViewCtrl {
 
     /*
         @name: convertAttendeeEventOccuranceListToWrapper
-        @createdBy: Daniel Tilley
         @description: Used to convert a list of event occurances to Event Wrappers for attendees
         
         @param: allEvents - the events to convert
@@ -119,7 +121,6 @@ public with sharing class ListViewCtrl {
 
     /*
         @name: convertEventListToWrapper
-        @createdBy: Daniel Tilley
         @description: Used to convert a list of event occurances to Event Wrappers
         
         @param: allEvents - the events to convert
@@ -216,7 +217,6 @@ public with sharing class ListViewCtrl {
 
     /*
         @name: convertTimeToString
-        @createdBy: Daniel Tilley
         @description: Used to convert a Time variable to a string variable
         
         @param: theTime - the time var to convert
