@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
+.calendar-border{
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: .25rem;
+}
+
+.row-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.row-item{
+    flex: 0 0 14.2847%;
+    border: 1px solid rgba(0,0,0,.06);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.row-span-3{
+    flex: 0 0 42.8571428571%;
+    border: 1px solid rgba(0,0,0,.06);
+}
+
+.text-bold{
+    font-weight: bold;
+}
+
+.text-hover{
+    cursor: pointer;
+}
+
+.border-bottom{
+    border-bottom: 1px solid rgba(0,0,0,.06);
+}

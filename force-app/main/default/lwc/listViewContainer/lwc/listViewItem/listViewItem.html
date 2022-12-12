@@ -1,0 +1,108 @@
+<!--
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+-->
+
+<template>
+    <section class="event-container">
+        <header class="border-bottom">
+
+            <div class="slds-grid slds-grid_vertical">
+
+                <div class="slds-col slds-p-horizontal_small slds-p-top_small">
+                    <div class="slds-clearfix">
+
+                        <div class="slds-float_left">
+                            <lightning-icon icon-name="standard:event" alternative-text="" size="medium"
+                                title="medium event">
+                            </lightning-icon>
+                        </div>
+
+                        <div class="slds-float_right">
+                            <button class="slds-button slds-button_neutral" onclick={handleShowMoreClicked}>
+                                See More</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="slds-col slds-p-around_small slds-text-align_left">
+                    <span class="slds-text-heading_small text-bold">
+                        {currentEvent.Name}
+                    </span>
+                </div>
+
+            </div>
+        </header>
+
+        <section class="slds-p-top_small">
+            <div class="slds-grid slds-grid_vertical">
+
+                <!-- DATE -->
+                <div class="slds-col slds-p-vertical_xx-small slds-text-align_left">
+
+                    <span class="item-block slds-m-right_xx-small">
+                        <lightning-icon icon-name="utility:date_input" alternative-text="" size="small"
+                            title="date xx-small">
+                        </lightning-icon>
+                    </span>
+
+                    <span class="item-block slds-m-left_xx-small">
+                        {currentEvent.StartDateString} - {currentEvent.EndDateString}
+                    </span>
+
+                </div>
+
+                <!-- TIME -->
+                <div class="slds-col slds-p-vertical_xx-small slds-text-align_left">
+
+                    <span class="item-block slds-m-right_xx-small">
+                        <lightning-icon icon-name="utility:date_time" alternative-text="" size="small"
+                            title="time xx-small">
+                        </lightning-icon>
+                    </span>
+
+                    <span class="item-block slds-m-left_xx-small">
+                        {currentEvent.StartTimeString} - {currentEvent.EndTimeString}
+                    </span>
+
+                </div>
+
+                <!-- INSTRUCTOR -->
+                <div class="slds-col slds-p-vertical_xx-small slds-text-align_left">
+
+                    <span class="item-block slds-m-right_xx-small">
+                        <lightning-icon icon-name="utility:questions_and_answers" alternative-text="" size="small"
+                            title="instructor xx-small">
+                        </lightning-icon>
+                    </span>
+
+                    <span class="item-block slds-m-left_xx-small">
+                        {currentEvent.InstructorName}
+                    </span>
+
+                </div>
+
+                <!-- TYPE -->
+                <div class="slds-col slds-p-vertical_xx-small slds-text-align_left">
+
+                    <span class="item-block slds-m-right_xx-small">
+                        <lightning-icon icon-name="utility:location" alternative-text="" size="small"
+                            title="type xx-small">
+                        </lightning-icon>
+                    </span>
+
+                    <span class="item-block slds-m-left_xx-small">
+                        {currentEvent.EventType}
+                    </span>
+
+                </div>
+
+            </div>
+        </section>
+    </section>
+</template>

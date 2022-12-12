@@ -1,0 +1,291 @@
+<!--
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+-->
+
+<template>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+        aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header slds-modal__header_empty">
+                <lightning-button-icon class="slds-modal__close" icon-name="utility:close" size="large"
+                    variant="bare-inverse" onclick={closeClickedHandler}>
+                </lightning-button-icon>
+            </header>
+            <div class="slds-modal__content" id="modal-content-id-1">
+                <slot>
+                    <!-- ADMIN VIEW -->
+                    <template if:true={isAdminView}>
+                        <!-- Event -->
+                        <template if:true={showEventModal}>
+                            <header class="slds-p-around_medium border-bottom">
+                                <h1 class="slds-align_absolute-center slds-text-heading_medium">{modalData.Name} -
+                                    {modalData.StartTimeString}</h1>
+                            </header>
+
+                            <lightning-accordion active-section-name="details">
+                                <lightning-accordion-section name="details" label="Details">
+
+                                    <section class="slds-p-around_small max-width">
+                                        <lightning-record-form record-id={modalData.Id}
+                                            object-api-name={objectData.apiName} layout-type="Full" mode="view">
+                                        </lightning-record-form>
+
+                                        <template if:true={isUserEventOwner}>
+                                            <div class="slds-p-around_medium slds-text-align_center">
+                                                <button class="slds-button slds-button_destructive" onclick={handleDeleteEventClicked}>
+                                                    <span class="slds-p-vertical_xx-small">
+                                                        <span class="slds-p-right_xx-small">
+                                                            <lightning-icon icon-name="utility:delete" alternative-text="" variant="inverse" size="xx-small"></lightning-icon>
+                                                        </span>
+                                                        <span class="slds-p-left_xx-small text-bold">Delete Event</span>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </template>
+                                    </section>
+
+                                </lightning-accordion-section>
+
+                                <template if:true={isUserEventOwner}>
+
+                                    <lightning-accordion-section name="attendees" label="Attendees">
+
+                                        <section class="slds-p-around_small max-width">
+                                            <c-attendee-list-view attendee-list={modalData.Attendees}
+                                                onattendeeremoved={handleAttendeeDeleted}></c-attendee-list-view>
+                                        </section>
+    
+                                    </lightning-accordion-section>
+
+                                </template>
+                                
+                            </lightning-accordion>
+                        </template>
+
+                        <!-- Events -->
+                        <template if:true={showEventsModal}>
+                            <header class="slds-p-around_medium border-bottom">
+                                <h1 class="slds-align_absolute-center slds-text-heading_medium">Events Info -
+                                    {currentDateString}</h1>
+                            </header>
+
+                            <div class="flex-row-container">
+                                <div class="item-small">
+                                    <section class="slds-grid slds-grid_vertical">
+                                        <template for:each={modalData.data.fullList} for:item="event">
+                                            <div class="slds-col border-bottom row-item" key={event.Id}
+                                                data-id={event.Id} onclick={eventClicked}>
+                                                <p
+                                                    class="slds-p-around_medium slds-align_absolute-center slds-truncate">
+                                                    {event.Name} - {event.StartTimeString}
+                                                </p>
+                                            </div>
+                                        </template>
+
+                                    </section>
+                                </div>
+
+                                <div class="item-large border-left">
+
+                                    <lightning-accordion active-section-name="details">
+                                        <lightning-accordion-section name="details" label="Details">
+
+                                            <section class="slds-p-around_small max-width">
+
+                                                <template if:true={showRecordData}>
+                                                    <lightning-record-form record-id={selectedRecordId}
+                                                        object-api-name={objectData.apiName} layout-type="Full"
+                                                        mode="view">
+                                                    </lightning-record-form>
+
+                                                    <template if:true={isUserEventOwner}>
+                                                        <div class="slds-p-around_medium slds-text-align_center">
+                                                            <button class="slds-button slds-button_destructive" onclick={handleDeleteEventClicked}>
+                                                                <span class="slds-p-vertical_xx-small">
+                                                                    <span class="slds-p-right_xx-small">
+                                                                        <lightning-icon icon-name="utility:delete" alternative-text="" variant="inverse" size="xx-small"></lightning-icon>
+                                                                    </span>
+                                                                    <span class="slds-p-left_xx-small text-bold">Delete Event</span>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </template>
+                                                    
+                                                    </div>
+                                                </template>
+
+                                                <template if:false={showRecordData}>
+                                                    Please select an event...
+                                                </template>
+
+                                            </section>
+
+                                        </lightning-accordion-section>
+
+                                        <template if:true={isUserEventOwner}>
+
+                                            <lightning-accordion-section name="attendees" label="Attendees">
+
+                                                <section class="slds-p-around_small max-width">
+    
+                                                    <template if:true={showAttendeeData}>
+                                                        <c-attendee-list-view attendee-list={selectedAttendeeList}
+                                                            onattendeeremoved={handleAttendeeDeleted}>
+                                                        </c-attendee-list-view>
+                                                    </template>
+    
+                                                    <template if:false={showAttendeeData}>
+                                                        Please select an event...
+                                                    </template>
+    
+                                                </section>
+    
+                                            </lightning-accordion-section>
+
+                                        </template>
+                                        
+                                    </lightning-accordion>
+
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+
+
+                    <!-- ATTENDEE VIEW -->
+                    <template if:true={isAttendeeView}>
+                        <!-- Event -->
+                        <template if:true={showEventModal}>
+                            <header class="slds-p-around_medium border-bottom">
+                                <h1 class="slds-align_absolute-center slds-text-heading_medium">{modalData.Name} -
+                                    {modalData.StartTimeString}</h1>
+                            </header>
+
+                            <section class="slds-p-around_small max-width">
+                                <div class="slds-p-vertical_x-small border-bottom">
+
+                                    <h2 class="slds-p-vertical_small slds-text-heading_small slds-text-align_center text-bold">
+                                        Details
+                                    </h2>
+
+                                    <lightning-record-form class="slds-p-bottom_x-small" record-id={modalData.Id} object-api-name={objectData.apiName}
+                                        layout-type="Full" mode="view">
+                                    </lightning-record-form>
+
+                                </div>
+
+                                <div class="slds-p-vertical_x-small">
+
+                                    <h2 class="slds-p-vertical_small slds-text-heading_small slds-text-align_center text-bold">
+                                        Attendance
+                                    </h2>
+                                    
+                                    <template if:false={isUserEventOwner}>
+                                        <c-attendee-info-view 
+                                            onattendanceupdated={handleAttendeeDeleted}
+                                            current-user-attending={modalData.CurrentUserRegistered}
+                                            current-user-attendee-info={modalData.CurrentUserAttendee}
+                                            event-id={modalData.Id}>
+                                        </c-attendee-info-view>
+                                    </template>
+
+                                    <template if:true={isUserEventOwner}>
+                                        <div class="slds-text-align_center text-bold">
+                                            Looks like you're the insructor for this event! You're already on the list.
+                                        </div>
+                                    </template>
+                                    
+                                </div>
+                            </section>
+                        </template>
+
+                        <!-- Events -->
+                        <template if:true={showEventsModal}>
+                            <header class="slds-p-around_medium border-bottom">
+                                <h1 class="slds-align_absolute-center slds-text-heading_medium">Events Info -
+                                    {currentDateString}</h1>
+                            </header>
+
+                            <div class="flex-row-container">
+                                <div class="item-small">
+                                    <section class="slds-grid slds-grid_vertical">
+                                        <template for:each={modalData.data.fullList} for:item="event">
+                                            <div class="slds-col border-bottom row-item" key={event.Id}
+                                                data-id={event.Id} onclick={eventClicked}>
+                                                <p
+                                                    class="slds-p-around_medium slds-align_absolute-center slds-truncate">
+                                                    {event.Name} - {event.StartTimeString}
+                                                </p>
+                                            </div>
+                                        </template>
+
+                                    </section>
+                                </div>
+
+                                <div class="item-large border-left">
+                                    <section class="slds-p-around_small max-width">
+
+                                        <template if:true={showRecordData}>
+                                            <div class="slds-p-vertical_x-small border-bottom">
+
+                                                <h2 class="slds-p-vertical_small slds-text-heading_small slds-text-align_center text-bold">
+                                                    Details
+                                                </h2>
+
+                                                <lightning-record-form class="slds-p-bottom_x-small" record-id={selectedRecordId}
+                                                    object-api-name={objectData.apiName} layout-type="Full" mode="view">
+                                                </lightning-record-form>
+
+                                            </div>
+
+                                            <div class="slds-p-vertical_x-small">
+
+                                                <h2 class="slds-p-vertical_small slds-text-heading_small slds-text-align_center text-bold">
+                                                    Attendance
+                                                </h2>
+
+                                                <template if:false={isUserEventOwner}>
+                                                    <c-attendee-info-view
+                                                        onattendanceupdated={handleAttendeeDeleted}
+                                                        current-user-attending={selectedRecord.CurrentUserRegistered}
+                                                        current-user-attendee-info={selectedRecord.CurrentUserAttendee}
+                                                        event-id={selectedRecordId}>
+                                                    </c-attendee-info-view>
+                                                </template>
+
+                                                <template if:true={isUserEventOwner}>
+                                                    <div class="slds-text-align_center text-bold">
+                                                        Looks like you're the insructor for this event! You're already on the list.
+                                                    </div>
+                                                </template>
+                                                
+                                            </div>
+                                        </template>
+
+                                        <template if:false={showAttendeeData}>
+                                            Please select an event...
+                                        </template>
+
+                                    </section>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+
+                </slot>
+            </div>
+            <template if:false={hideFooter}>
+                <footer class="slds-modal__footer">
+                    <lightning-button class="slds-m-right_x-small" variant="neutral" label={cancelLabel}
+                        onclick={cancelClickedHandler}></lightning-button>
+                </footer>
+            </template>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

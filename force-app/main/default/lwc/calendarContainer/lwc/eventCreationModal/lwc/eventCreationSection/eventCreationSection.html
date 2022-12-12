@@ -1,0 +1,35 @@
+<!--
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+-->
+
+<template>
+    <section class="slds-align_absolute-center slds-p-bottom_medium slds-m-bottom_medium border-bottom">
+
+        <div class="slds-grid slds-grid_vertical">
+            <div class="slds-col slds-align_absolute-center">
+                <div class="slds-p-vertical_small slds-text-heading_small">
+                    Create a New Event
+                </div>
+            </div>
+
+            <div class="slds-col slds-align_absolute-center">
+                <template if:false={createNewEventSelected}>
+                    <lightning-button-icon class="clickable" icon-name="action:new" alternative-text="New Event"
+                        title="New Event" onclick={handleNewEventClick}>
+                    </lightning-button-icon>
+                </template>
+
+                <template if:true={createNewEventSelected}>
+                    <lightning-record-form object-api-name={eventObjectData.objectApiName} layout-type="Full"
+                        oncancel={handleEventFormCancelled} onsuccess={handleEventCreation} onerror={handleFormError}>
+                    </lightning-record-form>
+                </template>
+            </div>
+        </div>
+    </section>
+</template>

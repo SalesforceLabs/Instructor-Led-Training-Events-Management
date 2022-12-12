@@ -1,0 +1,128 @@
+<!--
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+-->
+
+<template>
+    <section class="slds-p-around_xx-small">
+        <template if:true={signUpConfirmed}>
+            <template if:true={currentUserAttendanceConfirmationStatus}>
+                <div class="slds-p-vertical_xx-small slds-text-align_center text-bold">
+                    Thanks for confirming your attendance. We hope you enjoyed the event!
+                </div>
+            </template>
+
+            <template if:false={currentUserAttendanceConfirmationStatus}>
+                <div class="slds-p-vertical_xx-small slds-text-align_center text-bold">
+                    Looks like you've already signed up! What would you like to do?
+                </div>
+            </template>
+            
+
+            <template if:false={currentUserSignUpConfirmationStatus}>
+                <div class="slds-p-vertical_xx-small slds-text-align_center text-bold slds-text-color_error">
+                    *** Please check your e-mail to confirm your sign up ***
+                </div>
+            </template>
+            
+            <div class="slds-p-vertical_xx-small slds-align_absolute-center slds-m-bottom_small">
+                <div class="slds-grid">
+
+                    <div class="slds-col slds-p-around_xx-small">
+                        <button class="slds-button slds-button_neutral" onclick={handleUserCancelSignUpClicked} disabled={cancelSignUpButtonDisabled}>
+                            <span class="slds-p-vertical_xx-small">
+                                <span class="slds-p-right_xx-small">
+                                    <lightning-icon icon-name="utility:leave_conference" alternative-text="Cancel Sign Up" size="xx-small"></lightning-icon>
+                                </span>
+                                <span class="slds-p-left_xx-small text-bold">Cancel Sign Up</span>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="slds-col slds-p-around_xx-small">
+                        <button class="slds-button slds-button_neutral" onclick={handleUserAttendanceConfirmationClicked} disabled={currentUserAttendanceConfirmButtonDisabled}>
+                            <span class="slds-p-vertical_xx-small">
+                                <span class="slds-p-right_xx-small">
+                                    <lightning-icon icon-name="utility:event" alternative-text="Confirm Attendance" size="xx-small"></lightning-icon>
+                                </span>
+                                <span class="slds-p-left_xx-small text-bold">Confirm Attendance</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <template if:true={showAttendanceConfirmInput}>
+                <section class="slds-align_absolute-center border-top slds-p-top_small">
+                    <div class="slds-grid slds-grid_vertical">
+
+                        <div class="slds-col ">
+                            <div class="slds-p-vertical_xx-small slds-text-align_center text-bold">
+                                Ask your Trainer for the attendance code!
+                            </div>
+                        </div>
+
+                        <div class="slds-col ">
+                            <div class="slds-p-vertical_xx-small">
+                                <lightning-input type="text" label="Attendance Confirmation Code" onchange={attendanceCodeChanged}></lightning-input>
+                            </div>
+                        </div>
+
+                        <div class="slds-col">
+                            <div class="slds-p-vertical_xx-small slds-text-align_center">
+                                <div class="slds-grid">
+            
+                                    <div class="slds-col slds-p-around_xx-small">
+                                        <button class="slds-button slds-button_neutral" onclick={handleAttendanceCodeSubmitClicked}>
+                                            <span class="slds-p-vertical_xx-small">
+                                                <span class="slds-p-right_xx-small">
+                                                    <lightning-icon icon-name="utility:check" alternative-text="Confirm" size="xx-small"></lightning-icon>
+                                                </span>
+                                                <span class="slds-p-left_xx-small text-bold">Confirm</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                
+                                    <div class="slds-col slds-p-around_xx-small">
+                                        <button class="slds-button slds-button_neutral" onclick={handleAttendanceCodeCancelClicked}>
+                                            <span class="slds-p-vertical_xx-small">
+                                                <span class="slds-p-right_xx-small">
+                                                    <lightning-icon icon-name="utility:close" alternative-text="Cancel" size="xx-small"></lightning-icon>
+                                                </span>
+                                                <span class="slds-p-left_xx-small text-bold">Cancel</span>
+                                            </span>
+                                        </button>
+                                    </div>
+            
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+            </template>
+        </template>
+
+        <template if:false={signUpConfirmed}>
+            <div class="slds-p-vertical_xx-small slds-text-align_center text-bold">
+                Looks like you haven't signed up to this event!
+            </div>
+
+            <div class="slds-p-vertical_xx-small slds-align_absolute-center">
+                <button class="slds-button slds-button_neutral" onclick={handleUserSignUpClicked}>
+                    <span class="slds-p-vertical_xx-small">
+                        <span class="slds-p-right_xx-small">
+                            <lightning-icon icon-name="utility:adduser" alternative-text="Sign Up" size="xx-small"></lightning-icon>
+                        </span>
+                        <span class="slds-p-left_xx-small text-bold">Sign Up</span>
+                    </span>
+                </button>
+            </div>
+        </template>
+    </section>
+    
+</template>

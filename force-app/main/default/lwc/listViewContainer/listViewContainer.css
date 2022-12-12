@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
+.border-bottom{
+    border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+.item-block{
+    display: inline-block;
+}
+
+.full-width{
+    width: 100%;
+}
+
+.clickable{
+    cursor: pointer;
+}
+
+.item{
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.item:hover{
+    background-color: rgba(26,115,232,0.1);
+}
+
+.item-not-selected{
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
+}
+
+.item-selected{
+    border-left: 2px solid #1a73e8;
+    border-right: 2px solid #1a73e8;
+    font-weight: bold;
+}

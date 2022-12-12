@@ -1,0 +1,143 @@
+<!--
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+-->
+
+<template>
+    <lightning-card>
+
+        <section slot="title">
+            <header class="slds-m-vertical_medium">
+                <c-date-display-block current-month={currentMonth} current-year={currentYear}
+                    ondateselected={handleDisplayDateClicked} onmonthchanged={handleMonthSelectionChange}
+                    onyearchanged={handleYearSelectionChange}></c-date-display-block>
+            </header>
+        </section>
+
+        <section class="border-bottom">
+
+            <template if:true={showDateSelection}>
+
+                <section class="slds-m-bottom_large slds-p-horizontal_medium">
+                    <c-date-filter-conatiner selected-month={monthVarString} selected-year={yearVarString}
+                        onclosefilter={handleCloseDateSelection} onmonthchanged={handleMonthSelectionChange}
+                        onyearchanged={handleYearSelectionChange} ontodayclicked={handleTodayClicked}>
+                    </c-date-filter-conatiner>
+                </section>
+
+            </template>
+
+        </section>
+
+        <section slot="footer">
+            <div class="slds-grid slds-grid_vertical">
+
+                <div class="slds-col slds-align--absolute-center slds-p-bottom_small full-width">
+
+                    <span class="item-block slds-m-right_x-small">
+                        <div class={allEventsClass} onclick={handleShowAllEventsClicked}>
+                            <div class="slds-text-heading_small slds-text-align--center slds-p-around--x-small">
+                                Show All Events
+                            </div>
+                        </div>
+                    </span>
+
+                    <span class="item-block slds-m-left_x-small slds-m-right_x-small">
+
+
+                        <template if:true={isAdminView}>
+                            <lightning-icon icon-name="action:log_event" class="clickable"
+                                onclick={handleCreateNewEventClicked} alternative-text="" size="medium"
+                                title="medium event">
+                            </lightning-icon>
+                        </template>
+
+                        <template if:true={isAttendeeView}>
+                            <lightning-icon icon-name="action:new_event" alternative-text="" size="medium"
+                                title="medium event">
+                            </lightning-icon>
+                        </template>
+                    </span>
+
+                    <span class="item-block slds-m-left_x-small">
+                        <div class={myEventsClass} onclick={handleShowMyEventsClicked}>
+                            <div class="slds-text-heading_small slds-text-align--center slds-p-around--x-small">
+                                Show My Events
+                            </div>
+                        </div>
+                    </span>
+                </div>
+
+
+                <div class="slds-col border-bottom full-width"></div>
+
+                <template if:true={showAllEvents}>
+                    <template if:true={showAllEventsList}>
+
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <template for:each={allEvents} for:item="event">
+                                <div key={event.Id}
+                                    class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-vertical_small">
+                                    <c-list-view-item current-event={event} onshowmoreclicked={handleShowMoreClicked}>
+                                    </c-list-view-item>
+                                </div>
+                            </template>
+                        </div>
+
+                    </template>
+
+                    <template if:false={showAllEventsList}>
+                        <div class="slds-col slds-align--absolute-center slds-p-vertical_large">
+                            <div class="slds-text-heading_small">
+                                Looks like we couldn't find any events!
+                            </div>
+                        </div>
+                    </template>
+                </template>
+
+                <template if:true={showMyEvents}>
+                    <template if:true={showMyEventsList}>
+
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <template for:each={myEvents} for:item="event">
+                                <div key={event.Id}
+                                    class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-vertical_small">
+                                    <c-list-view-item current-event={event} onshowmoreclicked={handleShowMoreClicked}>
+                                    </c-list-view-item>
+                                </div>
+                            </template>
+                        </div>
+
+                    </template>
+
+                    <template if:false={showMyEventsList}>
+                        <div class="slds-col slds-align--absolute-center slds-p-vertical_large">
+                            <div class="slds-text-heading_small">
+                                Looks like we couldn't find any events!
+                            </div>
+                        </div>
+                    </template>
+                </template>
+
+            </div>
+        </section>
+
+    </lightning-card>
+
+    <template if:true={showEventSelectModal}>
+        <c-event-selection-modal oncancel={handleCloseEventSelectModal} onclose={handleCloseEventSelectModal}
+            object-data={objectData} modal-selection-type={modalSelectionType} modal-data={modalData}
+            is-admin-view={isAdminView} is-attendee-view={isAttendeeView} onrecordchanged={handleRecordChanged}>
+        </c-event-selection-modal>
+    </template>
+
+    <template if:true={showEventCreateModal}>
+        <c-event-creation-modal oncancel={handleCloseEventCreateModal} onclose={handleCloseEventCreateModal}
+            object-data={objectData} hide-footer="true" is-admin-view={isAdminView} is-attendee-view={isAttendeeView}>
+        </c-event-creation-modal>
+    </template>
+</template>

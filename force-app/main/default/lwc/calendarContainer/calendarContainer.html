@@ -1,0 +1,92 @@
+<!--
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+-->
+
+<template>
+    <lightning-card>
+        <section slot="title">
+            <header class="slds-m-vertical_medium">
+                <c-date-display-block current-month={currentMonth} current-year={currentYear}
+                    ondateselected={handleDisplayDateClicked} onmonthchanged={handleMonthSelectionChange}
+                    onyearchanged={handleYearSelectionChange}></c-date-display-block>
+            </header>
+        </section>
+
+        <section class="border-bottom">
+
+            <template if:true={showDateSelection}>
+
+                <section class="slds-m-bottom_large slds-p-horizontal_medium">
+                    <c-date-filter-conatiner selected-month={monthVarString} selected-year={yearVarString}
+                        onclosefilter={handleCloseDateSelection} onmonthchanged={handleMonthSelectionChange}
+                        onyearchanged={handleYearSelectionChange} ontodayclicked={handleTodayClicked}>
+                    </c-date-filter-conatiner>
+                </section>
+
+            </template>
+
+        </section>
+
+        <section slot="footer">
+            <div class="calendar-border">
+                <section class="rows-container slds-grid slds-grid_vertical">
+
+                    <header class="row-container slds-col">
+
+                        <template for:each={daysOfWeekList} for:item="day">
+                            <div class="row-item" key={day}>
+                                <div class="slds-align_absolute-center slds-p-vertical_small text-bold">
+                                    {day}
+                                </div>
+                            </div>
+                        </template>
+
+                    </header>
+
+                    <template for:each={calendarData} for:item="row">
+                        <section class="slds-col" key={row.rowId}>
+                            <!--
+                            <div class="row-container">
+                                <div class="row-span-3">Full Day Event</div>
+                            </div>
+                            -->
+
+                            <div class="row-container">
+                                <template for:each={row.rowData} for:item="col">
+
+                                    <div class="slds-p-around_xx-small row-item" key={col.cellId}>
+                                        <c-calendar-cell-container oneventdateclicked={handleEventDateClicked}
+                                            onopenselectmodal={handleOpenEventSelectModal} current-cell-data={col}>
+                                        </c-calendar-cell-container>
+                                    </div>
+
+                                </template>
+
+                            </div>
+                        </section>
+
+                    </template>
+
+                </section>
+            </div>
+        </section>
+    </lightning-card>
+
+    <template if:true={showEventSelectModal}>
+        <c-event-selection-modal oncancel={handleCloseEventSelectModal} onclose={handleCloseEventSelectModal}
+            object-data={objectData} modal-selection-type={modalSelectionType} modal-data={modalData}
+            is-admin-view={isAdminView} is-attendee-view={isAttendeeView} onrecordchanged={handleRecordChanged}>
+        </c-event-selection-modal>
+    </template>
+
+    <template if:true={showEventCreateModal}>
+        <c-event-creation-modal oncancel={handleCloseEventCreateModal} onclose={handleCloseEventCreateModal}
+            object-data={objectData} hide-footer="true" is-admin-view={isAdminView} is-attendee-view={isAttendeeView}>
+        </c-event-creation-modal>
+    </template>
+</template>

@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) 2022, salesforce.com, inc.
+ * All rights reserved.
+ * SPDX-License-Identifier: BSD-3-Clause
+ * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+ */
+
+.cell-container{
+    width: 100%;
+}
+
+.date-block{
+    display: block;
+    margin-top: 2.5px;
+    line-height: 30px;
+    font-weight: 600;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
+    border-radius: 0.25rem;
+}
+
+.date-block-selectable:hover{
+    background-color: rgba(26,115,232,0.1);
+    border-left: 2px solid #1a73e8;
+    border-right: 2px solid #1a73e8;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.date{
+    padding: 5px 10px;
+    border-radius: 100px;
+}
+
+.date-standard{
+    color: #3c4043;
+}
+
+.date-today{
+    background-color: #1a73e8;
+    color: #fff;
+}
+
+.date-text{
+    color: #3c4043;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
+    border-radius: 0.25rem;
+}
+
+.date-text:hover{
+    border-left: 2px solid #1a73e8;
+    border-right: 2px solid #1a73e8;
+    border-radius: 0.25rem;
+}
+
+.full-width{
+    width: 100%;
+}
+
+.item-block{
+    display: block;
+    margin-top: 2.5px;
+    line-height: 25px;
+}
+
+.text-bold{
+    font-weight: bold;
+}
+
+.text-clickable{
+    cursor: pointer;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.text-hover-shadow:hover{
+    border-radius: 0.25rem;
+    background-color: rgba(26,115,232,0.1);
+}
